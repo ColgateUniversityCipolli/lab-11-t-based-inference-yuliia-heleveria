@@ -10,6 +10,7 @@
 # Load libraries
 ################################################################################
 library(pwr)
+library(tidyverse)
 
 ################################################################################
 # Task 1: using pwr package for R
@@ -27,5 +28,10 @@ power.analysis <- pwr.t.test(n = NULL, d=d, sig.level = alpha, power = power,
 num.obseravtions <- power.analysis$n
 
 ################################################################################
-# Task 2: using pwr package for R
+# Task 2: collecting data for Figure 2
 ################################################################################
+#load the file with deleted sheets
+fig.data <- read_csv("Fig2Dat.csv")
+#mutate data to get the difference
+fig.data <- fig.data|>
+  mutate("difference" = closer_vals - further_vals)
