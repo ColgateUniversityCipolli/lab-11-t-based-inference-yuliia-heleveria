@@ -1,4 +1,5 @@
 #make sure it runs from scratch
+#get the finite interval for the confodence interval by doing two-sided test
 
 ################################################################################
 # LAB 11 R CODE
@@ -118,7 +119,8 @@ p.val.close <- t.test(x=closer.dat, mu = mu0, alternative = "greater")
 conf.int.close <- p.val.close$conf.int #get the confidence interval
 conf.close.beg <- conf.int.close[1]
 conf.close.end <- conf.int.close[2]
-t.close <- p.val.close$statistic #get t 
+t.close <- p.val.close$statistic #get t
+df.close <- p.val.close$parameter #get df
 g.close <- hedges_g(x = closer.dat, mu = mu0, alternative = "greater") #get g
 #get p-value
 p.val.close <- p.val.close$p.value
@@ -130,6 +132,7 @@ conf.int.far <- p.val.far$conf.int #get the confidence interval
 conf.far.beg <- conf.int.far[1]
 conf.far.end <- conf.int.far[2]
 t.far <- p.val.far$statistic #get t 
+df.far <- p.val.far$parameter #get df
 g.far <- hedges_g(x = further.dat, mu = mu0, alternative = "less") #get g
 #get p-value
 p.val.far <- p.val.far$p.value
@@ -141,6 +144,7 @@ conf.int.diff <- p.val.diff$conf.int #get the confidence interval
 conf.diff.beg <- conf.int.diff[1]
 conf.diff.end <- conf.int.diff[2]
 t.diff <- p.val.diff$statistic #get t 
+df.diff <- p.val.diff$parameter #get df
 g.diff <- hedges_g(x = diff.dat, mu = mu0, alternative = "two.sided") #get g
 #get p-value
 p.val.diff <- p.val.diff$p.value
@@ -148,7 +152,15 @@ p.val.diff <- p.val.diff$p.value
 ################################################################################
 # Task 5: create hypothesis testing plots
 ################################################################################
+#part a - plot for close responses
+# For plotting the null distribution
+ggdat.t.close <- tibble(t=seq(-5,5,length.out=1000))|>
+  mutate(pdf.null = dt(closer.dat, df=df))
+# For plotting the observed point
+ggdat.obs.close <- tibble(t    = t.close, 
+                    y    = 0) # to plot on x-axis
 #plot for part a - close responses
-
+close.plot <- ggplot() 
+  
 
 
