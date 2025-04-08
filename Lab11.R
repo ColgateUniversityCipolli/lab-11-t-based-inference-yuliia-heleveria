@@ -11,6 +11,7 @@
 ################################################################################
 library(pwr)
 library(tidyverse)
+library(effectsize)
 
 ################################################################################
 # Task 1: using pwr package for R
@@ -43,7 +44,7 @@ fig.data <- fig.data|>
 further.dat <- fig.data$further_vals
 
 #do numerical summary for the data
-furthest.summary <- tibble(
+further.summary <- tibble(
   mean = mean(further.dat),
   sd = sd(further.dat),
   min = min(further.dat),
@@ -105,5 +106,49 @@ diff.boxplot <- ggplot(data = tibble(diff.dat))+
   theme_bw()+
   xlab("Paired difference")+
   ylab("Dopanime percentage change")
+
+################################################################################
+# Task 4: conduct the inferences
+################################################################################
+conf.level = 0.95
+mu0 <- 0
+#part a - conduct t-test for close responses
+p.val.close <- t.test(x=closer.dat, mu = mu0, alternative = "greater")
+#get values for parenthesis
+conf.int.close <- p.val.close$conf.int #get the confidence interval
+conf.close.beg <- conf.int.close[1]
+conf.close.end <- conf.int.close[2]
+t.close <- p.val.close$statistic #get t 
+g.close <- hedges_g(x = closer.dat, mu = mu0, alternative = "greater") #get g
+#get p-value
+p.val.close <- p.val.close$p.value
+
+#part b - conduct t-test for far responses
+p.val.far <- t.test(x=further.dat, mu = mu0, alternative = "less")
+#get values for parenthesis
+conf.int.far <- p.val.far$conf.int #get the confidence interval
+conf.far.beg <- conf.int.far[1]
+conf.far.end <- conf.int.far[2]
+t.far <- p.val.far$statistic #get t 
+g.far <- hedges_g(x = further.dat, mu = mu0, alternative = "less") #get g
+#get p-value
+p.val.far <- p.val.far$p.value
+
+#part c - conduct t-test for difference
+p.val.diff <- t.test(x=diff.dat, mu = mu0, alternative = "two.sided")
+#get values for parenthesis
+conf.int.diff <- p.val.diff$conf.int #get the confidence interval
+conf.diff.beg <- conf.int.diff[1]
+conf.diff.end <- conf.int.diff[2]
+t.diff <- p.val.diff$statistic #get t 
+g.diff <- hedges_g(x = diff.dat, mu = mu0, alternative = "two.sided") #get g
+#get p-value
+p.val.diff <- p.val.diff$p.value
+
+################################################################################
+# Task 5: create hypothesis testing plots
+################################################################################
+#plot for part a - close responses
+
 
 
