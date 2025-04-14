@@ -26,8 +26,8 @@ power <- 0.80
 power.analysis <- pwr.t.test(n = NULL, d=d, sig.level = alpha, power = power,
                              type = type, alternative = alternative)
 
-#extract n argument
-num.obseravtions <- power.analysis$n
+#extract n argument and get integer value (rounded up)
+num.obseravtions <- ceiling(power.analysis$n)
 
 ################################################################################
 # Task 2: collecting data for Figure 2
@@ -122,6 +122,8 @@ conf.close.end <- conf.int.close[2]
 t.close <- p.val.close$statistic #get t
 df.close <- p.val.close$parameter #get df
 g.close <- hedges_g(x = closer.dat, mu = mu0, alternative = "greater") #get g
+n.close <- p.val.close$parameter + 1
+s.close <- p.val.close$stderr * sqrt(n.close)
 #get p-value
 p.val.close <- p.val.close$p.value
 
@@ -134,6 +136,8 @@ conf.far.end <- conf.int.far[2]
 t.far <- p.val.far$statistic #get t 
 df.far <- p.val.far$parameter #get df
 g.far <- hedges_g(x = further.dat, mu = mu0, alternative = "less") #get g
+n.far <- p.val.far$parameter + 1
+s.far <- p.val.far$stderr * sqrt(n.far)
 #get p-value
 p.val.far <- p.val.far$p.value
 
@@ -146,6 +150,8 @@ conf.diff.end <- conf.int.diff[2]
 t.diff <- p.val.diff$statistic #get t 
 df.diff <- p.val.diff$parameter #get df
 g.diff <- hedges_g(x = diff.dat, mu = mu0, alternative = "two.sided") #get g
+n.diff <- p.val.diff$parameter + 1
+s.diff <- p.val.diff$stderr * sqrt(n.diff)
 #get p-value
 p.val.diff <- p.val.diff$p.value
 
@@ -154,13 +160,42 @@ p.val.diff <- p.val.diff$p.value
 ################################################################################
 #part a - plot for close responses
 # For plotting the null distribution
-ggdat.t.close <- tibble(t=seq(-5,5,length.out=1000))|>
-  mutate(pdf.null = dt(closer.dat, df=df))
+ggdat.t.close <- tibble(t=seq(-10,10,length.out=1000))|>
+  mutate(pdf.null = dt(x=t, df=df.close))
 # For plotting the observed point
-ggdat.obs.close <- tibble(t    = t.close, 
-                    y    = 0) # to plot on x-axis
+ggdat.obs.close <- tibble(t = t.close, 
+                          y = 0) # to plot on x-axis
+t.breaks <- c(-5, qt(p = 0.5, df = df.close), # rejection region (left)
+              0, 5, t.close)                  # t-statistic observed
+t.breaks <- sort(unique(round(t.breaks, 2)))
+xbar.breaks <- t.breaks * s.close/sqrt(n.close) + mu0
 #plot for part a - close responses
-close.plot <- ggplot() 
+close.plot <- ggplot() +
+  # null distribution
+  geom_line(data=ggdat.t.close, 
+            aes(x=t, y=pdf.null), color = "black")+
+  geom_hline(yintercept=0)+
+  # rejection regions
+  geom_ribbon(data=subset(ggdat.t.close, t<=qt(p = 0.05, df=df.close)), 
+              aes(x=t, ymin=0, ymax=pdf.null),
+              fill="gray", alpha=0.5)+
+  # plot p-value (not visible)
+  geom_ribbon(data=subset(ggdat.t.close, t>=t.close), 
+              aes(x=t, ymin=0, ymax=pdf.null),
+              fill="red", alpha=0.25)+
+  # plot observation point
+  geom_point(data=ggdat.obs.close, aes(x=t, y=y), color="red")+
+  
+  theme_bw()+
+  ylab("Density")+
+  scale_x_continuous("t",
+                     breaks = round(t.breaks,2),
+                     sec.axis = sec_axis(~.,
+                                         name = bquote(bar(x)),
+                                         breaks = t.breaks,
+                                         labels = round(xbar.breaks,2)))+
+  ggtitle("T-Test for Mean Dopamine Level of Close Responses for Zebra Finches",
+          subtitle=bquote(H[0]==0*";"~H[a]>0))
   
 
 
