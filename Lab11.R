@@ -165,7 +165,7 @@ ggdat.t.close <- tibble(t=seq(-10,10,length.out=1000))|>
 # For plotting the observed point
 ggdat.obs.close <- tibble(t = t.close, 
                           y = 0) # to plot on x-axis
-t.breaks <- c(-5, qt(p = 0.5, df = df.close), # rejection region (left)
+t.breaks <- c(-5, qt(p = 1-0.05, df = df.close), # rejection region (left)
               0, 5, t.close)                  # t-statistic observed
 t.breaks <- sort(unique(round(t.breaks, 2)))
 xbar.breaks <- t.breaks * s.close/sqrt(n.close) + mu0
@@ -176,7 +176,7 @@ close.plot <- ggplot() +
             aes(x=t, y=pdf.null), color = "black")+
   geom_hline(yintercept=0)+
   # rejection regions
-  geom_ribbon(data=subset(ggdat.t.close, t<=qt(p = 0.05, df=df.close)), 
+  geom_ribbon(data=subset(ggdat.t.close, t>=qt(p = 1-0.05, df=df.close)), 
               aes(x=t, ymin=0, ymax=pdf.null),
               fill="gray", alpha=0.5)+
   # plot p-value (not visible)
@@ -185,7 +185,6 @@ close.plot <- ggplot() +
               fill="red", alpha=0.25)+
   # plot observation point
   geom_point(data=ggdat.obs.close, aes(x=t, y=y), color="red")+
-  
   theme_bw()+
   ylab("Density")+
   scale_x_continuous("t",
@@ -196,6 +195,74 @@ close.plot <- ggplot() +
                                          labels = round(xbar.breaks,2)))+
   ggtitle("T-Test for Mean Dopamine Level of Close Responses for Zebra Finches",
           subtitle=bquote(H[0]==0*";"~H[a]>0))
-  
 
+#part b - plot for far responses
+# For plotting the null distribution
+ggdat.t.far <- tibble(t=seq(-10,10,length.out=1000))|>
+  mutate(pdf.null = dt(x=t, df=df.far))
+# For plotting the observed point
+ggdat.obs.far <- tibble(t = t.far, 
+                          y = 0) # to plot on x-axis
+t.breaks <- c(-5, qt(p = 0.05, df = df.far), # rejection region (left)
+              0, 5, t.far)                  # t-statistic observed
+t.breaks <- sort(unique(round(t.breaks, 2)))
+xbar.breaks <- t.breaks * s.far/sqrt(n.far) + mu0
+#plot for part a - far responses
+far.plot <- ggplot() +
+  # null distribution
+  geom_line(data=ggdat.t.far, 
+            aes(x=t, y=pdf.null), color = "black")+
+  geom_hline(yintercept=0)+
+  # rejection regions
+  geom_ribbon(data=subset(ggdat.t.far, t<=qt(p = 0.05, df=df.far)), 
+              aes(x=t, ymin=0, ymax=pdf.null),
+              fill="gray", alpha=0.5)+
+  # plot observation point
+  geom_point(data=ggdat.obs.far, aes(x=t, y=y), color="red")+
+  theme_bw()+
+  ylab("Density")+
+  scale_x_continuous("t",
+                     breaks = round(t.breaks,2),
+                     sec.axis = sec_axis(~.,
+                                         name = bquote(bar(x)),
+                                         breaks = t.breaks,
+                                         labels = round(xbar.breaks,2)))+
+  ggtitle("T-Test for Mean Dopamine Level of Far Responses for Zebra Finches",
+          subtitle=bquote(H[0]==0*";"~H[a]<0))
 
+#part c - plot for difference in responses
+# For plotting the null distribution
+ggdat.t.diff <- tibble(t=seq(-10,10,length.out=1000))|>
+  mutate(pdf.null = dt(x=t, df=df.diff))
+# For plotting the observed point
+ggdat.obs.diff <- tibble(t = t.diff, 
+                        y = 0) # to plot on x-axis
+t.breaks <- c(-5, qt(p = 0.025, df = df.diff), # rejection region (left)
+              0, qt(p = 1-0.025, df = df.diff), 5, t.diff)                  # t-statistic observed
+t.breaks <- sort(unique(round(t.breaks, 2)))
+xbar.breaks <- t.breaks * s.diff/sqrt(n.diff) + mu0
+#plot for part a - diff responses
+diff.plot <- ggplot() +
+  # null distribution
+  geom_line(data=ggdat.t.diff, 
+            aes(x=t, y=pdf.null), color = "black")+
+  geom_hline(yintercept=0)+
+  # rejection regions
+  geom_ribbon(data=subset(ggdat.t.diff, t<=qt(p = 0.025, df=df.diff)), 
+              aes(x=t, ymin=0, ymax=pdf.null),
+              fill="gray", alpha=0.5)+
+  geom_ribbon(data=subset(ggdat.t, t>=qt(0.975, df=df.diff)), 
+              aes(x=t, ymin=0, ymax=pdf.null),
+              fill="grey", alpha=0.5)+
+  # plot observation point
+  geom_point(data=ggdat.obs.diff, aes(x=t, y=y), color="red")+
+  theme_bw()+
+  ylab("Density")+
+  scale_x_continuous("t",
+                     breaks = round(t.breaks,2),
+                     sec.axis = sec_axis(~.,
+                                         name = bquote(bar(x)),
+                                         breaks = t.breaks,
+                                         labels = round(xbar.breaks,2)))+
+  ggtitle("T-Test for Mean Dopamine Level of Difference in Responses for Zebra Finches",
+          subtitle=bquote(H[0]==0*";"~H[a] != 0))
