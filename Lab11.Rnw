@@ -208,8 +208,57 @@ like: ($t=23.99$, $p<0.0001$; $g=1.34$; 95\% CI: 4.43, 4.60).\\
 correction of their $p$-values. I'm waiting to hear back from them via email!
 \begin{enumerate}
   \item ``The close responses differed significantly from 0 ($p=1.63 \times 10^{-8}$).''
+  <<size = 'scriptsize', message=F, warning=F>>=
+conf.level = 0.95
+mu0 <- 0
+#part a - conduct t-test for close responses
+p.val.close <- t.test(x=closer.dat, mu = mu0, alternative = "greater")
+#get values for parenthesis
+conf.int.close <- p.val.close$conf.int #get the confidence interval
+conf.close.beg <- conf.int.close[1]
+conf.close.end <- conf.int.close[2]
+t.close <- p.val.close$statistic #get t
+df.close <- p.val.close$parameter #get df
+g.close <- hedges_g(x = closer.dat, mu = mu0, alternative = "greater") #get g
+n.close <- p.val.close$parameter + 1
+s.close <- p.val.close$stderr * sqrt(n.close)
+#get p-value
+p.val.close <- p.val.close$p.value
+@
+
+The close responses are statistically discernible from 0 ($t=\Sexpr{round(t.close, 2)}$, $p< 0.0001$; $g=\Sexpr{round(g.close$Hedges_g, 2)}$; one-sided 95\% CI: \Sexpr{round(conf.close.beg, 2)}, \Sexpr{round(conf.close.end, 2)}).
   \item ``The far responses differed significantly from 0 ($p=5.17 \times 10^{-8}$).''
+   <<size = 'scriptsize', message=F, warning=F>>=
+p.val.far <- t.test(x=further.dat, mu = mu0, alternative = "less")
+#get values for parenthesis
+conf.int.far <- p.val.far$conf.int #get the confidence interval
+conf.far.beg <- conf.int.far[1]
+conf.far.end <- conf.int.far[2]
+t.far <- p.val.far$statistic #get t 
+df.far <- p.val.far$parameter #get df
+g.far <- hedges_g(x = further.dat, mu = mu0, alternative = "less") #get g
+n.far <- p.val.far$parameter + 1
+s.far <- p.val.far$stderr * sqrt(n.far)
+#get p-value
+p.val.far <- p.val.far$p.value
+@
+The far responses are statistically discernible from 0 ($t=\Sexpr{round(t.far, 2)}$, $p< 0.0001$; $g=\Sexpr{round(g.far$Hedges_g, 2)}$; one-sided 95\% CI: \Sexpr{round(conf.far.beg, 2)}, \Sexpr{round(conf.far.end, 2)}).
   \item ``The difference between populations was significant ($p=1.04 \times10^{-8}$).''
+   <<size = 'scriptsize', message=F, warning=F>>=
+p.val.diff <- t.test(x=diff.dat, mu = mu0, alternative = "two.sided")
+#get values for parenthesis
+conf.int.diff <- p.val.diff$conf.int #get the confidence interval
+conf.diff.beg <- conf.int.diff[1]
+conf.diff.end <- conf.int.diff[2]
+t.diff <- p.val.diff$statistic #get t 
+df.diff <- p.val.diff$parameter #get df
+g.diff <- hedges_g(x = diff.dat, mu = mu0, alternative = "two.sided") #get g
+n.diff <- p.val.diff$parameter + 1
+s.diff <- p.val.diff$stderr * sqrt(n.diff)
+#get p-value
+p.val.diff <- p.val.diff$p.value
+@
+The difference between populations are statistically discernible ($t=\Sexpr{round(t.diff, 2)}$, $p< 0.0001$; $g=\Sexpr{round(g.diff$Hedges_g, 2)}$; two-sided 95\% CI: \Sexpr{round(conf.diff.beg, 2)}, \Sexpr{round(conf.diff.end, 2)}).
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONDUCT THE TESTS

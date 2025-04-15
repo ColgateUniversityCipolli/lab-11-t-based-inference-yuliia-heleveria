@@ -313,8 +313,69 @@ like: ($t=23.99$, $p<0.0001$; $g=1.34$; 95\% CI: 4.43, 4.60).\\
 correction of their $p$-values. I'm waiting to hear back from them via email!
 \begin{enumerate}
   \item ``The close responses differed significantly from 0 ($p=1.63 \times 10^{-8}$).''
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{conf.level} \hlkwb{=} \hlnum{0.95}
+\hldef{mu0} \hlkwb{<-} \hlnum{0}
+\hlcom{#part a - conduct t-test for close responses}
+\hldef{p.val.close} \hlkwb{<-} \hlkwd{t.test}\hldef{(}\hlkwc{x}\hldef{=closer.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"greater"}\hldef{)}
+\hlcom{#get values for parenthesis}
+\hldef{conf.int.close} \hlkwb{<-} \hldef{p.val.close}\hlopt{$}\hldef{conf.int} \hlcom{#get the confidence interval}
+\hldef{conf.close.beg} \hlkwb{<-} \hldef{conf.int.close[}\hlnum{1}\hldef{]}
+\hldef{conf.close.end} \hlkwb{<-} \hldef{conf.int.close[}\hlnum{2}\hldef{]}
+\hldef{t.close} \hlkwb{<-} \hldef{p.val.close}\hlopt{$}\hldef{statistic} \hlcom{#get t}
+\hldef{df.close} \hlkwb{<-} \hldef{p.val.close}\hlopt{$}\hldef{parameter} \hlcom{#get df}
+\hldef{g.close} \hlkwb{<-} \hlkwd{hedges_g}\hldef{(}\hlkwc{x} \hldef{= closer.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"greater"}\hldef{)} \hlcom{#get g}
+\hldef{n.close} \hlkwb{<-} \hldef{p.val.close}\hlopt{$}\hldef{parameter} \hlopt{+} \hlnum{1}
+\hldef{s.close} \hlkwb{<-} \hldef{p.val.close}\hlopt{$}\hldef{stderr} \hlopt{*} \hlkwd{sqrt}\hldef{(n.close)}
+\hlcom{#get p-value}
+\hldef{p.val.close} \hlkwb{<-} \hldef{p.val.close}\hlopt{$}\hldef{p.value}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+The close responses are statistically discernible from 0 ($t=8.3$, $p< 0.0001$; $g=1.61$; one-sided 95\% CI: 0.12, \ensuremath{\infty{}}).
   \item ``The far responses differed significantly from 0 ($p=5.17 \times 10^{-8}$).''
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{p.val.far} \hlkwb{<-} \hlkwd{t.test}\hldef{(}\hlkwc{x}\hldef{=further.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"less"}\hldef{)}
+\hlcom{#get values for parenthesis}
+\hldef{conf.int.far} \hlkwb{<-} \hldef{p.val.far}\hlopt{$}\hldef{conf.int} \hlcom{#get the confidence interval}
+\hldef{conf.far.beg} \hlkwb{<-} \hldef{conf.int.far[}\hlnum{1}\hldef{]}
+\hldef{conf.far.end} \hlkwb{<-} \hldef{conf.int.far[}\hlnum{2}\hldef{]}
+\hldef{t.far} \hlkwb{<-} \hldef{p.val.far}\hlopt{$}\hldef{statistic} \hlcom{#get t }
+\hldef{df.far} \hlkwb{<-} \hldef{p.val.far}\hlopt{$}\hldef{parameter} \hlcom{#get df}
+\hldef{g.far} \hlkwb{<-} \hlkwd{hedges_g}\hldef{(}\hlkwc{x} \hldef{= further.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"less"}\hldef{)} \hlcom{#get g}
+\hldef{n.far} \hlkwb{<-} \hldef{p.val.far}\hlopt{$}\hldef{parameter} \hlopt{+} \hlnum{1}
+\hldef{s.far} \hlkwb{<-} \hldef{p.val.far}\hlopt{$}\hldef{stderr} \hlopt{*} \hlkwd{sqrt}\hldef{(n.far)}
+\hlcom{#get p-value}
+\hldef{p.val.far} \hlkwb{<-} \hldef{p.val.far}\hlopt{$}\hldef{p.value}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+The far responses are statistically discernible from 0 ($t=-7.78$, $p< 0.0001$; $g=-1.51$; one-sided 95\% CI: \ensuremath{-\infty{}}, -0.16).
   \item ``The difference between populations was significant ($p=1.04 \times10^{-8}$).''
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{p.val.diff} \hlkwb{<-} \hlkwd{t.test}\hldef{(}\hlkwc{x}\hldef{=diff.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)}
+\hlcom{#get values for parenthesis}
+\hldef{conf.int.diff} \hlkwb{<-} \hldef{p.val.diff}\hlopt{$}\hldef{conf.int} \hlcom{#get the confidence interval}
+\hldef{conf.diff.beg} \hlkwb{<-} \hldef{conf.int.diff[}\hlnum{1}\hldef{]}
+\hldef{conf.diff.end} \hlkwb{<-} \hldef{conf.int.diff[}\hlnum{2}\hldef{]}
+\hldef{t.diff} \hlkwb{<-} \hldef{p.val.diff}\hlopt{$}\hldef{statistic} \hlcom{#get t }
+\hldef{df.diff} \hlkwb{<-} \hldef{p.val.diff}\hlopt{$}\hldef{parameter} \hlcom{#get df}
+\hldef{g.diff} \hlkwb{<-} \hlkwd{hedges_g}\hldef{(}\hlkwc{x} \hldef{= diff.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)} \hlcom{#get g}
+\hldef{n.diff} \hlkwb{<-} \hldef{p.val.diff}\hlopt{$}\hldef{parameter} \hlopt{+} \hlnum{1}
+\hldef{s.diff} \hlkwb{<-} \hldef{p.val.diff}\hlopt{$}\hldef{stderr} \hlopt{*} \hlkwd{sqrt}\hldef{(n.diff)}
+\hlcom{#get p-value}
+\hldef{p.val.diff} \hlkwb{<-} \hldef{p.val.diff}\hlopt{$}\hldef{p.value}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+The difference between populations are statistically discernible ($t=8.51$, $p< 0.0001$; $g=1.65$; two-sided 95\% CI: 0.27, 0.45).
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONDUCT THE TESTS
