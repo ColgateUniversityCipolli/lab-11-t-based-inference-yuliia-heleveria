@@ -171,12 +171,21 @@ t.breaks <- c(-5, qt(p = 1-0.05, df = df.close), # rejection region (left)
               0, 5, t.close)                  # t-statistic observed
 t.breaks <- sort(unique(round(t.breaks, 2)))
 xbar.breaks <- t.breaks * s.close/sqrt(n.close) + mu0
+
+R <- 1000
+resamples.close <- tibble(t=numeric(R))
+for(i in 1:R){
+  curr.sample <- sample(x=closer.dat,
+                        size=n.close,
+                        replace=T)
+  resamples.close$t[i] = (mean(curr.sample)-mu0)/(sd(curr.sample)/sqrt(n.close))
+}
+
 #plot for part a - close responses
 close.plot <- ggplot() +
   # null distribution
   geom_line(data=ggdat.t.close, 
-            aes(x=t, y=pdf.null), color = "black")+
-  geom_hline(yintercept=0)+
+            aes(x=t, y=pdf.null, color = "Null Distribution"))+
   # rejection regions
   geom_ribbon(data=subset(ggdat.t.close, t>=qt(p = 1-0.05, df=df.close)), 
               aes(x=t, ymin=0, ymax=pdf.null),
@@ -185,10 +194,18 @@ close.plot <- ggplot() +
   geom_ribbon(data=subset(ggdat.t.close, t>=t.close), 
               aes(x=t, ymin=0, ymax=pdf.null),
               fill="red", alpha=0.25)+
-  # plot observation point
-  geom_point(data=ggdat.obs.close, aes(x=t, y=y), color="red")+
+  # Resampling Distribution
+  stat_density(data=resamples.close,
+               aes(x=t, color="Resampling Distribution"),
+               geom="line")+
   theme_bw()+
   ylab("Density")+
+  scale_color_manual(values = c("Null Distribution" = "black", "Resampling Distribution" = "grey"),
+                     name = "") +
+  geom_hline(yintercept=0)+
+  # plot observation point
+  geom_point(data=ggdat.obs.close, aes(x=t, y=y), color="red")+
+  theme(legend.position = "bottom")+
   scale_x_continuous("t",
                      breaks = round(t.breaks,2),
                      sec.axis = sec_axis(~.,
@@ -205,22 +222,34 @@ ggdat.t.far <- tibble(t=seq(-10,10,length.out=1000))|>
 # For plotting the observed point
 ggdat.obs.far <- tibble(t = t.far, 
                           y = 0) # to plot on x-axis
-t.breaks <- c(-5, qt(p = 0.05, df = df.far), # rejection region (left)
-              0, 5, t.far)                  # t-statistic observed
+t.breaks <- c(t.far, -5, qt(p = 0.05, df = df.far), # rejection region (left)
+              0, 5)                  # t-statistic observed
 t.breaks <- sort(unique(round(t.breaks, 2)))
 xbar.breaks <- t.breaks * s.far/sqrt(n.far) + mu0
-#plot for part a - far responses
+
+resamples.far <- tibble(t=numeric(R))
+for(i in 1:R){
+  curr.sample <- sample(x=further.dat,
+                        size=n.far,
+                        replace=T)
+  resamples.far$t[i] = (mean(curr.sample)-mu0)/(sd(curr.sample)/sqrt(n.far))
+}
+#plot for part b - far responses
 far.plot <- ggplot() +
   # null distribution
   geom_line(data=ggdat.t.far, 
-            aes(x=t, y=pdf.null), color = "black")+
-  geom_hline(yintercept=0)+
+            aes(x=t, y=pdf.null, color = "Null Distribution"))+
   # rejection regions
   geom_ribbon(data=subset(ggdat.t.far, t<=qt(p = 0.05, df=df.far)), 
               aes(x=t, ymin=0, ymax=pdf.null),
               fill="gray", alpha=0.5)+
+  # Resampling Distribution
+  stat_density(data=resamples.far,
+               aes(x=t, color="Resampling Distribution"),
+               geom="line")+
   # plot observation point
   geom_point(data=ggdat.obs.far, aes(x=t, y=y), color="red")+
+  geom_hline(yintercept=0)+
   theme_bw()+
   ylab("Density")+
   scale_x_continuous("t",
@@ -229,6 +258,9 @@ far.plot <- ggplot() +
                                          name = bquote(bar(x)),
                                          breaks = t.breaks,
                                          labels = round(xbar.breaks,2)))+
+  scale_color_manual(values = c("Null Distribution" = "black", "Resampling Distribution" = "grey"),
+                     name = "") +
+  theme(legend.position = "bottom")+
   ggtitle("T-Test for Mean Dopamine Level of Far Responses for Zebra Finches",
           subtitle=bquote(H[0]==0*";"~H[a]<0))
 
@@ -243,11 +275,19 @@ t.breaks <- c(-5, qt(p = 0.025, df = df.diff), # rejection region (left)
               0, qt(p = 1-0.025, df = df.diff), 5, t.diff)                  # t-statistic observed
 t.breaks <- sort(unique(round(t.breaks, 2)))
 xbar.breaks <- t.breaks * s.diff/sqrt(n.diff) + mu0
-#plot for part a - diff responses
+
+resamples.diff <- tibble(t=numeric(R))
+for(i in 1:R){
+  curr.sample <- sample(x=diff.dat,
+                        size=n.diff,
+                        replace=T)
+  resamples.diff$t[i] = (mean(curr.sample)-mu0)/(sd(curr.sample)/sqrt(n.diff))
+}
+#plot for part c - diff responses
 diff.plot <- ggplot() +
   # null distribution
   geom_line(data=ggdat.t.diff, 
-            aes(x=t, y=pdf.null), color = "black")+
+            aes(x=t, y=pdf.null, color = "Null Distribution"))+
   geom_hline(yintercept=0)+
   # rejection regions
   geom_ribbon(data=subset(ggdat.t.diff, t<=qt(p = 0.025, df=df.diff)), 
@@ -256,6 +296,10 @@ diff.plot <- ggplot() +
   geom_ribbon(data=subset(ggdat.t.diff, t>=qt(0.975, df=df.diff)), 
               aes(x=t, ymin=0, ymax=pdf.null),
               fill="grey", alpha=0.5)+
+  # Resampling Distribution
+  stat_density(data=resamples.diff,
+               aes(x=t, color="Resampling Distribution"),
+               geom="line")+
   # plot observation point
   geom_point(data=ggdat.obs.diff, aes(x=t, y=y), color="red")+
   theme_bw()+
@@ -266,5 +310,8 @@ diff.plot <- ggplot() +
                                          name = bquote(bar(x)),
                                          breaks = t.breaks,
                                          labels = round(xbar.breaks,2)))+
+  scale_color_manual(values = c("Null Distribution" = "black", "Resampling Distribution" = "grey"),
+                     name = "") +
+  theme(legend.position = "bottom")+
   ggtitle("T-Test for Mean Dopamine Level of Difference in Responses for Zebra Finches",
           subtitle=bquote(H[0]==0*";"~H[a] != 0))
