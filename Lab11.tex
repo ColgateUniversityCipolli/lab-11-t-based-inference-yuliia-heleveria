@@ -319,63 +319,63 @@ correction of their $p$-values. I'm waiting to hear back from them via email!
 \hldef{conf.level} \hlkwb{=} \hlnum{0.95}
 \hldef{mu0} \hlkwb{<-} \hlnum{0}
 \hlcom{#part a - conduct t-test for close responses}
-\hldef{p.val.close} \hlkwb{<-} \hlkwd{t.test}\hldef{(}\hlkwc{x}\hldef{=closer.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"greater"}\hldef{)}
-\hlcom{#get values for parenthesis}
-\hldef{conf.int.close} \hlkwb{<-} \hldef{p.val.close}\hlopt{$}\hldef{conf.int} \hlcom{#get the confidence interval}
+\hldef{t.test.close} \hlkwb{<-} \hlkwd{t.test}\hldef{(}\hlkwc{x}\hldef{=closer.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"greater"}\hldef{)}
+\hlcom{#get the confidence interval using the two-sided test}
+\hldef{t.test.close.interval} \hlkwb{<-} \hlkwd{t.test}\hldef{(}\hlkwc{x}\hldef{=closer.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)}
+\hldef{conf.int.close} \hlkwb{<-} \hldef{t.test.close.interval}\hlopt{$}\hldef{conf.int} \hlcom{#get the confidence interval}
 \hldef{conf.close.beg} \hlkwb{<-} \hldef{conf.int.close[}\hlnum{1}\hldef{]}
 \hldef{conf.close.end} \hlkwb{<-} \hldef{conf.int.close[}\hlnum{2}\hldef{]}
-\hldef{t.close} \hlkwb{<-} \hldef{p.val.close}\hlopt{$}\hldef{statistic} \hlcom{#get t}
-\hldef{df.close} \hlkwb{<-} \hldef{p.val.close}\hlopt{$}\hldef{parameter} \hlcom{#get df}
+\hldef{t.close} \hlkwb{<-} \hldef{t.test.close}\hlopt{$}\hldef{statistic} \hlcom{#get t}
+\hldef{df.close} \hlkwb{<-} \hldef{t.test.close}\hlopt{$}\hldef{parameter} \hlcom{#get df}
 \hldef{g.close} \hlkwb{<-} \hlkwd{hedges_g}\hldef{(}\hlkwc{x} \hldef{= closer.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"greater"}\hldef{)} \hlcom{#get g}
-\hldef{n.close} \hlkwb{<-} \hldef{p.val.close}\hlopt{$}\hldef{parameter} \hlopt{+} \hlnum{1}
-\hldef{s.close} \hlkwb{<-} \hldef{p.val.close}\hlopt{$}\hldef{stderr} \hlopt{*} \hlkwd{sqrt}\hldef{(n.close)}
-\hlcom{#get p-value}
-\hldef{p.val.close} \hlkwb{<-} \hldef{p.val.close}\hlopt{$}\hldef{p.value}
+\hldef{n.close} \hlkwb{<-} \hldef{t.test.close}\hlopt{$}\hldef{parameter} \hlopt{+} \hlnum{1} \hlcom{#get n}
+\hldef{s.close} \hlkwb{<-} \hldef{t.test.close}\hlopt{$}\hldef{stderr} \hlopt{*} \hlkwd{sqrt}\hldef{(n.close)} \hlcom{#get standard error}
+\hldef{t.test.close} \hlkwb{<-} \hldef{t.test.close}\hlopt{$}\hldef{p.value} \hlcom{#get p-value}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
-The close responses are statistically discernible from 0 ($t=8.3$, $p< 0.0001$; $g=1.61$; one-sided 95\% CI: 0.12, \ensuremath{\infty{}}).
+The close responses are statistically discernible from 0 ($t=8.3$, $p< 0.0001$; $g=1.61$; 95\% CI: 0.12, 0.2).
   \item ``The far responses differed significantly from 0 ($p=5.17 \times 10^{-8}$).''
 \begin{knitrout}\scriptsize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hldef{p.val.far} \hlkwb{<-} \hlkwd{t.test}\hldef{(}\hlkwc{x}\hldef{=further.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"less"}\hldef{)}
-\hlcom{#get values for parenthesis}
-\hldef{conf.int.far} \hlkwb{<-} \hldef{p.val.far}\hlopt{$}\hldef{conf.int} \hlcom{#get the confidence interval}
+\hldef{t.test.far} \hlkwb{<-} \hlkwd{t.test}\hldef{(}\hlkwc{x}\hldef{=further.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"less"}\hldef{)}
+\hlcom{#get the confidence interval using the two-sided test}
+\hldef{t.test.far.interval} \hlkwb{<-} \hlkwd{t.test}\hldef{(}\hlkwc{x}\hldef{=further.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)}
+\hldef{conf.int.far} \hlkwb{<-} \hldef{t.test.far.interval}\hlopt{$}\hldef{conf.int} \hlcom{#get the confidence interval}
 \hldef{conf.far.beg} \hlkwb{<-} \hldef{conf.int.far[}\hlnum{1}\hldef{]}
 \hldef{conf.far.end} \hlkwb{<-} \hldef{conf.int.far[}\hlnum{2}\hldef{]}
-\hldef{t.far} \hlkwb{<-} \hldef{p.val.far}\hlopt{$}\hldef{statistic} \hlcom{#get t }
-\hldef{df.far} \hlkwb{<-} \hldef{p.val.far}\hlopt{$}\hldef{parameter} \hlcom{#get df}
+\hldef{t.far} \hlkwb{<-} \hldef{t.test.far}\hlopt{$}\hldef{statistic} \hlcom{#get t }
+\hldef{df.far} \hlkwb{<-} \hldef{t.test.far}\hlopt{$}\hldef{parameter} \hlcom{#get df}
 \hldef{g.far} \hlkwb{<-} \hlkwd{hedges_g}\hldef{(}\hlkwc{x} \hldef{= further.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"less"}\hldef{)} \hlcom{#get g}
-\hldef{n.far} \hlkwb{<-} \hldef{p.val.far}\hlopt{$}\hldef{parameter} \hlopt{+} \hlnum{1}
-\hldef{s.far} \hlkwb{<-} \hldef{p.val.far}\hlopt{$}\hldef{stderr} \hlopt{*} \hlkwd{sqrt}\hldef{(n.far)}
-\hlcom{#get p-value}
-\hldef{p.val.far} \hlkwb{<-} \hldef{p.val.far}\hlopt{$}\hldef{p.value}
+\hldef{n.far} \hlkwb{<-} \hldef{t.test.far}\hlopt{$}\hldef{parameter} \hlopt{+} \hlnum{1} \hlcom{#get n}
+\hldef{s.far} \hlkwb{<-} \hldef{t.test.far}\hlopt{$}\hldef{stderr} \hlopt{*} \hlkwd{sqrt}\hldef{(n.far)} \hlcom{#get standard error}
+\hldef{t.test.far} \hlkwb{<-} \hldef{t.test.far}\hlopt{$}\hldef{p.value} \hlcom{#get p-value}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
-The far responses are statistically discernible from 0 ($t=-7.78$, $p< 0.0001$; $g=-1.51$; one-sided 95\% CI: \ensuremath{-\infty{}}, -0.16).
+The far responses are statistically discernible from 0 ($t=-7.78$, $p< 0.0001$; $g=-1.51$; 95\% CI: -0.26, -0.15).
   \item ``The difference between populations was significant ($p=1.04 \times10^{-8}$).''
 \begin{knitrout}\scriptsize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hldef{p.val.diff} \hlkwb{<-} \hlkwd{t.test}\hldef{(}\hlkwc{x}\hldef{=diff.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)}
-\hlcom{#get values for parenthesis}
-\hldef{conf.int.diff} \hlkwb{<-} \hldef{p.val.diff}\hlopt{$}\hldef{conf.int} \hlcom{#get the confidence interval}
+\hldef{t.test.diff} \hlkwb{<-} \hlkwd{t.test}\hldef{(}\hlkwc{x}\hldef{=diff.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)}
+\hlcom{#get the confidence interval using the two-sided test}
+\hldef{t.test.diff.interval} \hlkwb{<-} \hlkwd{t.test}\hldef{(}\hlkwc{x}\hldef{=diff.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)}
+\hldef{conf.int.diff} \hlkwb{<-} \hldef{t.test.diff.interval}\hlopt{$}\hldef{conf.int} \hlcom{#get the confidence interval}
 \hldef{conf.diff.beg} \hlkwb{<-} \hldef{conf.int.diff[}\hlnum{1}\hldef{]}
 \hldef{conf.diff.end} \hlkwb{<-} \hldef{conf.int.diff[}\hlnum{2}\hldef{]}
-\hldef{t.diff} \hlkwb{<-} \hldef{p.val.diff}\hlopt{$}\hldef{statistic} \hlcom{#get t }
-\hldef{df.diff} \hlkwb{<-} \hldef{p.val.diff}\hlopt{$}\hldef{parameter} \hlcom{#get df}
+\hldef{t.diff} \hlkwb{<-} \hldef{t.test.diff}\hlopt{$}\hldef{statistic} \hlcom{#get t }
+\hldef{df.diff} \hlkwb{<-} \hldef{t.test.diff}\hlopt{$}\hldef{parameter} \hlcom{#get df}
 \hldef{g.diff} \hlkwb{<-} \hlkwd{hedges_g}\hldef{(}\hlkwc{x} \hldef{= diff.dat,} \hlkwc{mu} \hldef{= mu0,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)} \hlcom{#get g}
-\hldef{n.diff} \hlkwb{<-} \hldef{p.val.diff}\hlopt{$}\hldef{parameter} \hlopt{+} \hlnum{1}
-\hldef{s.diff} \hlkwb{<-} \hldef{p.val.diff}\hlopt{$}\hldef{stderr} \hlopt{*} \hlkwd{sqrt}\hldef{(n.diff)}
-\hlcom{#get p-value}
-\hldef{p.val.diff} \hlkwb{<-} \hldef{p.val.diff}\hlopt{$}\hldef{p.value}
+\hldef{n.diff} \hlkwb{<-} \hldef{t.test.diff}\hlopt{$}\hldef{parameter} \hlopt{+} \hlnum{1} \hlcom{#get n}
+\hldef{s.diff} \hlkwb{<-} \hldef{t.test.diff}\hlopt{$}\hldef{stderr} \hlopt{*} \hlkwd{sqrt}\hldef{(n.diff)} \hlcom{#get standard error}
+\hldef{t.test.diff} \hlkwb{<-} \hldef{t.test.diff}\hlopt{$}\hldef{p.value} \hlcom{#get p-value}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
-The difference between populations are statistically discernible ($t=8.51$, $p< 0.0001$; $g=1.65$; two-sided 95\% CI: 0.27, 0.45).
+The difference between populations are statistically discernible ($t=8.51$, $p< 0.0001$; $g=1.65$; 95\% CI: 0.27, 0.45).
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONDUCT THE TESTS
@@ -397,12 +397,21 @@ hypothesis testing plots for each part of the previous question.
             \hlnum{0}\hldef{,} \hlnum{5}\hldef{, t.close)}                  \hlcom{# t-statistic observed}
 \hldef{t.breaks} \hlkwb{<-} \hlkwd{sort}\hldef{(}\hlkwd{unique}\hldef{(}\hlkwd{round}\hldef{(t.breaks,} \hlnum{2}\hldef{)))}
 \hldef{xbar.breaks} \hlkwb{<-} \hldef{t.breaks} \hlopt{*} \hldef{s.close}\hlopt{/}\hlkwd{sqrt}\hldef{(n.close)} \hlopt{+} \hldef{mu0}
+
+\hldef{R} \hlkwb{<-} \hlnum{1000}
+\hldef{resamples.close} \hlkwb{<-} \hlkwd{tibble}\hldef{(}\hlkwc{t}\hldef{=}\hlkwd{numeric}\hldef{(R))}
+\hlkwa{for}\hldef{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hldef{R)\{}
+\hldef{curr.sample} \hlkwb{<-} \hlkwd{sample}\hldef{(}\hlkwc{x}\hldef{=closer.dat,}
+                      \hlkwc{size}\hldef{=n.close,}
+                      \hlkwc{replace}\hldef{=T)}
+\hldef{resamples.close}\hlopt{$}\hldef{t[i]} \hlkwb{=} \hldef{(}\hlkwd{mean}\hldef{(curr.sample)}\hlopt{-}\hldef{mu0)}\hlopt{/}\hldef{(}\hlkwd{sd}\hldef{(curr.sample)}\hlopt{/}\hlkwd{sqrt}\hldef{(n.close))}
+\hldef{\}}
+
 \hlcom{#plot for part a - close responses}
 \hldef{close.plot} \hlkwb{<-} \hlkwd{ggplot}\hldef{()} \hlopt{+}
 \hlcom{# null distribution}
 \hlkwd{geom_line}\hldef{(}\hlkwc{data}\hldef{=ggdat.t.close,}
-          \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=pdf.null),} \hlkwc{color} \hldef{=} \hlsng{"black"}\hldef{)}\hlopt{+}
-\hlkwd{geom_hline}\hldef{(}\hlkwc{yintercept}\hldef{=}\hlnum{0}\hldef{)}\hlopt{+}
+          \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=pdf.null,} \hlkwc{color} \hldef{=} \hlsng{"Null Distribution"}\hldef{))}\hlopt{+}
 \hlcom{# rejection regions}
 \hlkwd{geom_ribbon}\hldef{(}\hlkwc{data}\hldef{=}\hlkwd{subset}\hldef{(ggdat.t.close, t}\hlopt{>=}\hlkwd{qt}\hldef{(}\hlkwc{p} \hldef{=} \hlnum{1}\hlopt{-}\hlnum{0.05}\hldef{,} \hlkwc{df}\hldef{=df.close)),}
             \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{ymin}\hldef{=}\hlnum{0}\hldef{,} \hlkwc{ymax}\hldef{=pdf.null),}
@@ -411,10 +420,18 @@ hypothesis testing plots for each part of the previous question.
 \hlkwd{geom_ribbon}\hldef{(}\hlkwc{data}\hldef{=}\hlkwd{subset}\hldef{(ggdat.t.close, t}\hlopt{>=}\hldef{t.close),}
             \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{ymin}\hldef{=}\hlnum{0}\hldef{,} \hlkwc{ymax}\hldef{=pdf.null),}
             \hlkwc{fill}\hldef{=}\hlsng{"red"}\hldef{,} \hlkwc{alpha}\hldef{=}\hlnum{0.25}\hldef{)}\hlopt{+}
-\hlcom{# plot observation point}
-\hlkwd{geom_point}\hldef{(}\hlkwc{data}\hldef{=ggdat.obs.close,} \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=y),} \hlkwc{color}\hldef{=}\hlsng{"red"}\hldef{)}\hlopt{+}
+\hlcom{# Resampling Distribution}
+\hlkwd{stat_density}\hldef{(}\hlkwc{data}\hldef{=resamples.close,}
+             \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{color}\hldef{=}\hlsng{"Resampling Distribution"}\hldef{),}
+             \hlkwc{geom}\hldef{=}\hlsng{"line"}\hldef{)}\hlopt{+}
 \hlkwd{theme_bw}\hldef{()}\hlopt{+}
 \hlkwd{ylab}\hldef{(}\hlsng{"Density"}\hldef{)}\hlopt{+}
+\hlkwd{scale_color_manual}\hldef{(}\hlkwc{values} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"Null Distribution"} \hldef{=} \hlsng{"black"}\hldef{,} \hlsng{"Resampling Distribution"} \hldef{=} \hlsng{"grey"}\hldef{),}
+                   \hlkwc{name} \hldef{=} \hlsng{""}\hldef{)} \hlopt{+}
+\hlkwd{geom_hline}\hldef{(}\hlkwc{yintercept}\hldef{=}\hlnum{0}\hldef{)}\hlopt{+}
+\hlcom{# plot observation point}
+\hlkwd{geom_point}\hldef{(}\hlkwc{data}\hldef{=ggdat.obs.close,} \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=y),} \hlkwc{color}\hldef{=}\hlsng{"red"}\hldef{)}\hlopt{+}
+\hlkwd{theme}\hldef{(}\hlkwc{legend.position} \hldef{=} \hlsng{"bottom"}\hldef{)}\hlopt{+}
 \hlkwd{scale_x_continuous}\hldef{(}\hlsng{"t"}\hldef{,}
                    \hlkwc{breaks} \hldef{=} \hlkwd{round}\hldef{(t.breaks,}\hlnum{2}\hldef{),}
                    \hlkwc{sec.axis} \hldef{=} \hlkwd{sec_axis}\hldef{(}\hlopt{~}\hldef{.,}
@@ -422,7 +439,7 @@ hypothesis testing plots for each part of the previous question.
                                        \hlkwc{breaks} \hldef{= t.breaks,}
                                        \hlkwc{labels} \hldef{=} \hlkwd{round}\hldef{(xbar.breaks,}\hlnum{2}\hldef{)))}\hlopt{+}
 \hlkwd{ggtitle}\hldef{(}\hlsng{"T-Test for Mean Dopamine Level of Close Responses"}\hldef{,}
-        \hlkwc{subtitle}\hldef{=}\hlkwd{bquote}\hldef{(H[}\hlnum{0}\hldef{]}\hlopt{==}\hlnum{0}\hlopt{*}\hlsng{";"}\hlopt{~}\hldef{H[a]}\hlopt{>}\hlnum{0}\hldef{))}
+        \hlkwc{subtitle}\hldef{=}\hlkwd{bquote}\hldef{(H[}\hlnum{0}\hldef{]}\hlopt{:} \hldef{mu[X]}\hlopt{==}\hlnum{0}\hlopt{*}\hlsng{";"}\hlopt{~}\hldef{H[a]}\hlopt{:} \hldef{mu[X]}\hlopt{>}\hlnum{0}\hldef{))}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -444,22 +461,34 @@ hypothesis testing plots for each part of the previous question.
 \hlcom{# For plotting the observed point}
 \hldef{ggdat.obs.far} \hlkwb{<-} \hlkwd{tibble}\hldef{(}\hlkwc{t} \hldef{= t.far,}
                         \hlkwc{y} \hldef{=} \hlnum{0}\hldef{)} \hlcom{# to plot on x-axis}
-\hldef{t.breaks} \hlkwb{<-} \hlkwd{c}\hldef{(}\hlopt{-}\hlnum{5}\hldef{,} \hlkwd{qt}\hldef{(}\hlkwc{p} \hldef{=} \hlnum{0.05}\hldef{,} \hlkwc{df} \hldef{= df.far),} \hlcom{# rejection region (left)}
-            \hlnum{0}\hldef{,} \hlnum{5}\hldef{, t.far)}                  \hlcom{# t-statistic observed}
+\hldef{t.breaks} \hlkwb{<-} \hlkwd{c}\hldef{(t.far,} \hlopt{-}\hlnum{5}\hldef{,} \hlkwd{qt}\hldef{(}\hlkwc{p} \hldef{=} \hlnum{0.05}\hldef{,} \hlkwc{df} \hldef{= df.far),} \hlcom{# rejection region (left)}
+            \hlnum{0}\hldef{,} \hlnum{5}\hldef{)}                  \hlcom{# t-statistic observed}
 \hldef{t.breaks} \hlkwb{<-} \hlkwd{sort}\hldef{(}\hlkwd{unique}\hldef{(}\hlkwd{round}\hldef{(t.breaks,} \hlnum{2}\hldef{)))}
 \hldef{xbar.breaks} \hlkwb{<-} \hldef{t.breaks} \hlopt{*} \hldef{s.far}\hlopt{/}\hlkwd{sqrt}\hldef{(n.far)} \hlopt{+} \hldef{mu0}
-\hlcom{#plot for part a - far responses}
+
+\hldef{resamples.far} \hlkwb{<-} \hlkwd{tibble}\hldef{(}\hlkwc{t}\hldef{=}\hlkwd{numeric}\hldef{(R))}
+\hlkwa{for}\hldef{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hldef{R)\{}
+\hldef{curr.sample} \hlkwb{<-} \hlkwd{sample}\hldef{(}\hlkwc{x}\hldef{=further.dat,}
+                      \hlkwc{size}\hldef{=n.far,}
+                      \hlkwc{replace}\hldef{=T)}
+\hldef{resamples.far}\hlopt{$}\hldef{t[i]} \hlkwb{=} \hldef{(}\hlkwd{mean}\hldef{(curr.sample)}\hlopt{-}\hldef{mu0)}\hlopt{/}\hldef{(}\hlkwd{sd}\hldef{(curr.sample)}\hlopt{/}\hlkwd{sqrt}\hldef{(n.far))}
+\hldef{\}}
+\hlcom{#plot for part b - far responses}
 \hldef{far.plot} \hlkwb{<-} \hlkwd{ggplot}\hldef{()} \hlopt{+}
 \hlcom{# null distribution}
 \hlkwd{geom_line}\hldef{(}\hlkwc{data}\hldef{=ggdat.t.far,}
-          \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=pdf.null),} \hlkwc{color} \hldef{=} \hlsng{"black"}\hldef{)}\hlopt{+}
-\hlkwd{geom_hline}\hldef{(}\hlkwc{yintercept}\hldef{=}\hlnum{0}\hldef{)}\hlopt{+}
+          \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=pdf.null,} \hlkwc{color} \hldef{=} \hlsng{"Null Distribution"}\hldef{))}\hlopt{+}
 \hlcom{# rejection regions}
 \hlkwd{geom_ribbon}\hldef{(}\hlkwc{data}\hldef{=}\hlkwd{subset}\hldef{(ggdat.t.far, t}\hlopt{<=}\hlkwd{qt}\hldef{(}\hlkwc{p} \hldef{=} \hlnum{0.05}\hldef{,} \hlkwc{df}\hldef{=df.far)),}
             \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{ymin}\hldef{=}\hlnum{0}\hldef{,} \hlkwc{ymax}\hldef{=pdf.null),}
             \hlkwc{fill}\hldef{=}\hlsng{"gray"}\hldef{,} \hlkwc{alpha}\hldef{=}\hlnum{0.5}\hldef{)}\hlopt{+}
+\hlcom{# Resampling Distribution}
+\hlkwd{stat_density}\hldef{(}\hlkwc{data}\hldef{=resamples.far,}
+             \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{color}\hldef{=}\hlsng{"Resampling Distribution"}\hldef{),}
+             \hlkwc{geom}\hldef{=}\hlsng{"line"}\hldef{)}\hlopt{+}
 \hlcom{# plot observation point}
 \hlkwd{geom_point}\hldef{(}\hlkwc{data}\hldef{=ggdat.obs.far,} \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=y),} \hlkwc{color}\hldef{=}\hlsng{"red"}\hldef{)}\hlopt{+}
+\hlkwd{geom_hline}\hldef{(}\hlkwc{yintercept}\hldef{=}\hlnum{0}\hldef{)}\hlopt{+}
 \hlkwd{theme_bw}\hldef{()}\hlopt{+}
 \hlkwd{ylab}\hldef{(}\hlsng{"Density"}\hldef{)}\hlopt{+}
 \hlkwd{scale_x_continuous}\hldef{(}\hlsng{"t"}\hldef{,}
@@ -468,8 +497,11 @@ hypothesis testing plots for each part of the previous question.
                                        \hlkwc{name} \hldef{=} \hlkwd{bquote}\hldef{(}\hlkwd{bar}\hldef{(x)),}
                                        \hlkwc{breaks} \hldef{= t.breaks,}
                                        \hlkwc{labels} \hldef{=} \hlkwd{round}\hldef{(xbar.breaks,}\hlnum{2}\hldef{)))}\hlopt{+}
-\hlkwd{ggtitle}\hldef{(}\hlsng{"T-Test for Mean Dopamine Level of Far Responses for Zebra Finches "}\hldef{,}
-        \hlkwc{subtitle}\hldef{=}\hlkwd{bquote}\hldef{(H[}\hlnum{0}\hldef{]}\hlopt{==}\hlnum{0}\hlopt{*}\hlsng{";"}\hlopt{~}\hldef{H[a]}\hlopt{<}\hlnum{0}\hldef{))}
+\hlkwd{scale_color_manual}\hldef{(}\hlkwc{values} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"Null Distribution"} \hldef{=} \hlsng{"black"}\hldef{,} \hlsng{"Resampling Distribution"} \hldef{=} \hlsng{"grey"}\hldef{),}
+                   \hlkwc{name} \hldef{=} \hlsng{""}\hldef{)} \hlopt{+}
+\hlkwd{theme}\hldef{(}\hlkwc{legend.position} \hldef{=} \hlsng{"bottom"}\hldef{)}\hlopt{+}
+\hlkwd{ggtitle}\hldef{(}\hlsng{"T-Test for Mean Dopamine Level of Far Responses"}\hldef{,}
+        \hlkwc{subtitle}\hldef{=}\hlkwd{bquote}\hldef{(H[}\hlnum{0}\hldef{]}\hlopt{:} \hldef{mu[X]}\hlopt{==}\hlnum{0}\hlopt{*}\hlsng{";"}\hlopt{~}\hldef{H[a]}\hlopt{:} \hldef{mu[X]} \hlopt{<}\hlnum{0}\hldef{))}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -495,12 +527,19 @@ hypothesis testing plots for each part of the previous question.
             \hlnum{0}\hldef{,} \hlkwd{qt}\hldef{(}\hlkwc{p} \hldef{=} \hlnum{1}\hlopt{-}\hlnum{0.025}\hldef{,} \hlkwc{df} \hldef{= df.diff),} \hlnum{5}\hldef{, t.diff)}                  \hlcom{# t-statistic observed}
 \hldef{t.breaks} \hlkwb{<-} \hlkwd{sort}\hldef{(}\hlkwd{unique}\hldef{(}\hlkwd{round}\hldef{(t.breaks,} \hlnum{2}\hldef{)))}
 \hldef{xbar.breaks} \hlkwb{<-} \hldef{t.breaks} \hlopt{*} \hldef{s.diff}\hlopt{/}\hlkwd{sqrt}\hldef{(n.diff)} \hlopt{+} \hldef{mu0}
-\hlcom{#plot for part a - diff responses}
+
+\hldef{resamples.diff} \hlkwb{<-} \hlkwd{tibble}\hldef{(}\hlkwc{t}\hldef{=}\hlkwd{numeric}\hldef{(R))}
+\hlkwa{for}\hldef{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hldef{R)\{}
+\hldef{curr.sample} \hlkwb{<-} \hlkwd{sample}\hldef{(}\hlkwc{x}\hldef{=diff.dat,}
+                      \hlkwc{size}\hldef{=n.diff,}
+                      \hlkwc{replace}\hldef{=T)}
+\hldef{resamples.diff}\hlopt{$}\hldef{t[i]} \hlkwb{=} \hldef{(}\hlkwd{mean}\hldef{(curr.sample)}\hlopt{-}\hldef{mu0)}\hlopt{/}\hldef{(}\hlkwd{sd}\hldef{(curr.sample)}\hlopt{/}\hlkwd{sqrt}\hldef{(n.diff))}
+\hldef{\}}
+\hlcom{#plot for part c - diff responses}
 \hldef{diff.plot} \hlkwb{<-} \hlkwd{ggplot}\hldef{()} \hlopt{+}
 \hlcom{# null distribution}
 \hlkwd{geom_line}\hldef{(}\hlkwc{data}\hldef{=ggdat.t.diff,}
-          \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=pdf.null),} \hlkwc{color} \hldef{=} \hlsng{"black"}\hldef{)}\hlopt{+}
-\hlkwd{geom_hline}\hldef{(}\hlkwc{yintercept}\hldef{=}\hlnum{0}\hldef{)}\hlopt{+}
+          \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=pdf.null,} \hlkwc{color} \hldef{=} \hlsng{"Null Distribution"}\hldef{))}\hlopt{+}
 \hlcom{# rejection regions}
 \hlkwd{geom_ribbon}\hldef{(}\hlkwc{data}\hldef{=}\hlkwd{subset}\hldef{(ggdat.t.diff, t}\hlopt{<=}\hlkwd{qt}\hldef{(}\hlkwc{p} \hldef{=} \hlnum{0.025}\hldef{,} \hlkwc{df}\hldef{=df.diff)),}
             \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{ymin}\hldef{=}\hlnum{0}\hldef{,} \hlkwc{ymax}\hldef{=pdf.null),}
@@ -508,6 +547,11 @@ hypothesis testing plots for each part of the previous question.
 \hlkwd{geom_ribbon}\hldef{(}\hlkwc{data}\hldef{=}\hlkwd{subset}\hldef{(ggdat.t.diff, t}\hlopt{>=}\hlkwd{qt}\hldef{(}\hlnum{0.975}\hldef{,} \hlkwc{df}\hldef{=df.diff)),}
             \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{ymin}\hldef{=}\hlnum{0}\hldef{,} \hlkwc{ymax}\hldef{=pdf.null),}
             \hlkwc{fill}\hldef{=}\hlsng{"grey"}\hldef{,} \hlkwc{alpha}\hldef{=}\hlnum{0.5}\hldef{)}\hlopt{+}
+\hlcom{# Resampling Distribution}
+\hlkwd{stat_density}\hldef{(}\hlkwc{data}\hldef{=resamples.diff,}
+             \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{color}\hldef{=}\hlsng{"Resampling Distribution"}\hldef{),}
+             \hlkwc{geom}\hldef{=}\hlsng{"line"}\hldef{)}\hlopt{+}
+\hlkwd{geom_hline}\hldef{(}\hlkwc{yintercept}\hldef{=}\hlnum{0}\hldef{)}\hlopt{+}
 \hlcom{# plot observation point}
 \hlkwd{geom_point}\hldef{(}\hlkwc{data}\hldef{=ggdat.obs.diff,} \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=y),} \hlkwc{color}\hldef{=}\hlsng{"red"}\hldef{)}\hlopt{+}
 \hlkwd{theme_bw}\hldef{()}\hlopt{+}
@@ -518,8 +562,11 @@ hypothesis testing plots for each part of the previous question.
                                        \hlkwc{name} \hldef{=} \hlkwd{bquote}\hldef{(}\hlkwd{bar}\hldef{(x)),}
                                        \hlkwc{breaks} \hldef{= t.breaks,}
                                        \hlkwc{labels} \hldef{=} \hlkwd{round}\hldef{(xbar.breaks,}\hlnum{2}\hldef{)))}\hlopt{+}
+\hlkwd{scale_color_manual}\hldef{(}\hlkwc{values} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"Null Distribution"} \hldef{=} \hlsng{"black"}\hldef{,} \hlsng{"Resampling Distribution"} \hldef{=} \hlsng{"grey"}\hldef{),}
+                   \hlkwc{name} \hldef{=} \hlsng{""}\hldef{)} \hlopt{+}
+\hlkwd{theme}\hldef{(}\hlkwc{legend.position} \hldef{=} \hlsng{"bottom"}\hldef{)}\hlopt{+}
 \hlkwd{ggtitle}\hldef{(}\hlsng{"T-Test for Mean Dopamine Level of Difference in Responses"}\hldef{,}
-        \hlkwc{subtitle}\hldef{=}\hlkwd{bquote}\hldef{(H[}\hlnum{0}\hldef{]}\hlopt{==}\hlnum{0}\hlopt{*}\hlsng{";"}\hlopt{~}\hldef{H[a]} \hlopt{!=} \hlnum{0}\hldef{))}
+        \hlkwc{subtitle}\hldef{=}\hlkwd{bquote}\hldef{(H[}\hlnum{0}\hldef{]}\hlopt{:} \hldef{mu[X]}\hlopt{==}\hlnum{0}\hlopt{*}\hlsng{";"}\hlopt{~}\hldef{H[a]}\hlopt{:} \hldef{mu[X]} \hlopt{!=} \hlnum{0}\hldef{))}
 \end{alltt}
 \end{kframe}
 \end{knitrout}

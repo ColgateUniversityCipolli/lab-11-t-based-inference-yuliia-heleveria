@@ -1,8 +1,7 @@
-#why is boxplot in between code
-#confidence intervals
+
 #descriptions for part 5
 #make sure vode runs from scratch
-#update the .rnw file for part 4 and 5
+
 
 ################################################################################
 # LAB 11 R CODE
@@ -289,7 +288,6 @@ diff.plot <- ggplot() +
   # null distribution
   geom_line(data=ggdat.t.diff, 
             aes(x=t, y=pdf.null, color = "Null Distribution"))+
-  geom_hline(yintercept=0)+
   # rejection regions
   geom_ribbon(data=subset(ggdat.t.diff, t<=qt(p = 0.025, df=df.diff)), 
               aes(x=t, ymin=0, ymax=pdf.null),
@@ -301,6 +299,7 @@ diff.plot <- ggplot() +
   stat_density(data=resamples.diff,
                aes(x=t, color="Resampling Distribution"),
                geom="line")+
+  geom_hline(yintercept=0)+
   # plot observation point
   geom_point(data=ggdat.obs.diff, aes(x=t, y=y), color="red")+
   theme_bw()+

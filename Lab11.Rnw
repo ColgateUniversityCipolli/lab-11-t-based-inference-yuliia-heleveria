@@ -212,53 +212,53 @@ correction of their $p$-values. I'm waiting to hear back from them via email!
 conf.level = 0.95
 mu0 <- 0
 #part a - conduct t-test for close responses
-p.val.close <- t.test(x=closer.dat, mu = mu0, alternative = "greater")
-#get values for parenthesis
-conf.int.close <- p.val.close$conf.int #get the confidence interval
+t.test.close <- t.test(x=closer.dat, mu = mu0, alternative = "greater")
+#get the confidence interval using the two-sided test
+t.test.close.interval <- t.test(x=closer.dat, mu = mu0, alternative = "two.sided")
+conf.int.close <- t.test.close.interval$conf.int #get the confidence interval
 conf.close.beg <- conf.int.close[1]
 conf.close.end <- conf.int.close[2]
-t.close <- p.val.close$statistic #get t
-df.close <- p.val.close$parameter #get df
+t.close <- t.test.close$statistic #get t
+df.close <- t.test.close$parameter #get df
 g.close <- hedges_g(x = closer.dat, mu = mu0, alternative = "greater") #get g
-n.close <- p.val.close$parameter + 1
-s.close <- p.val.close$stderr * sqrt(n.close)
-#get p-value
-p.val.close <- p.val.close$p.value
+n.close <- t.test.close$parameter + 1 #get n
+s.close <- t.test.close$stderr * sqrt(n.close) #get standard error
+t.test.close <- t.test.close$p.value #get p-value
 @
 
-The close responses are statistically discernible from 0 ($t=\Sexpr{round(t.close, 2)}$, $p< 0.0001$; $g=\Sexpr{round(g.close$Hedges_g, 2)}$; one-sided 95\% CI: \Sexpr{round(conf.close.beg, 2)}, \Sexpr{round(conf.close.end, 2)}).
+The close responses are statistically discernible from 0 ($t=\Sexpr{round(t.close, 2)}$, $p< 0.0001$; $g=\Sexpr{round(g.close$Hedges_g, 2)}$; 95\% CI: \Sexpr{round(conf.close.beg, 2)}, \Sexpr{round(conf.close.end, 2)}).
   \item ``The far responses differed significantly from 0 ($p=5.17 \times 10^{-8}$).''
    <<size = 'scriptsize', message=F, warning=F>>=
-p.val.far <- t.test(x=further.dat, mu = mu0, alternative = "less")
-#get values for parenthesis
-conf.int.far <- p.val.far$conf.int #get the confidence interval
+t.test.far <- t.test(x=further.dat, mu = mu0, alternative = "less")
+#get the confidence interval using the two-sided test
+t.test.far.interval <- t.test(x=further.dat, mu = mu0, alternative = "two.sided")
+conf.int.far <- t.test.far.interval$conf.int #get the confidence interval
 conf.far.beg <- conf.int.far[1]
 conf.far.end <- conf.int.far[2]
-t.far <- p.val.far$statistic #get t 
-df.far <- p.val.far$parameter #get df
+t.far <- t.test.far$statistic #get t 
+df.far <- t.test.far$parameter #get df
 g.far <- hedges_g(x = further.dat, mu = mu0, alternative = "less") #get g
-n.far <- p.val.far$parameter + 1
-s.far <- p.val.far$stderr * sqrt(n.far)
-#get p-value
-p.val.far <- p.val.far$p.value
+n.far <- t.test.far$parameter + 1 #get n
+s.far <- t.test.far$stderr * sqrt(n.far) #get standard error
+t.test.far <- t.test.far$p.value #get p-value
 @
-The far responses are statistically discernible from 0 ($t=\Sexpr{round(t.far, 2)}$, $p< 0.0001$; $g=\Sexpr{round(g.far$Hedges_g, 2)}$; one-sided 95\% CI: \Sexpr{round(conf.far.beg, 2)}, \Sexpr{round(conf.far.end, 2)}).
+The far responses are statistically discernible from 0 ($t=\Sexpr{round(t.far, 2)}$, $p< 0.0001$; $g=\Sexpr{round(g.far$Hedges_g, 2)}$; 95\% CI: \Sexpr{round(conf.far.beg, 2)}, \Sexpr{round(conf.far.end, 2)}).
   \item ``The difference between populations was significant ($p=1.04 \times10^{-8}$).''
    <<size = 'scriptsize', message=F, warning=F>>=
-p.val.diff <- t.test(x=diff.dat, mu = mu0, alternative = "two.sided")
-#get values for parenthesis
-conf.int.diff <- p.val.diff$conf.int #get the confidence interval
+t.test.diff <- t.test(x=diff.dat, mu = mu0, alternative = "two.sided")
+#get the confidence interval using the two-sided test
+t.test.diff.interval <- t.test(x=diff.dat, mu = mu0, alternative = "two.sided")
+conf.int.diff <- t.test.diff.interval$conf.int #get the confidence interval
 conf.diff.beg <- conf.int.diff[1]
 conf.diff.end <- conf.int.diff[2]
-t.diff <- p.val.diff$statistic #get t 
-df.diff <- p.val.diff$parameter #get df
+t.diff <- t.test.diff$statistic #get t 
+df.diff <- t.test.diff$parameter #get df
 g.diff <- hedges_g(x = diff.dat, mu = mu0, alternative = "two.sided") #get g
-n.diff <- p.val.diff$parameter + 1
-s.diff <- p.val.diff$stderr * sqrt(n.diff)
-#get p-value
-p.val.diff <- p.val.diff$p.value
+n.diff <- t.test.diff$parameter + 1 #get n
+s.diff <- t.test.diff$stderr * sqrt(n.diff) #get standard error
+t.test.diff <- t.test.diff$p.value #get p-value
 @
-The difference between populations are statistically discernible ($t=\Sexpr{round(t.diff, 2)}$, $p< 0.0001$; $g=\Sexpr{round(g.diff$Hedges_g, 2)}$; two-sided 95\% CI: \Sexpr{round(conf.diff.beg, 2)}, \Sexpr{round(conf.diff.end, 2)}).
+The difference between populations are statistically discernible ($t=\Sexpr{round(t.diff, 2)}$, $p< 0.0001$; $g=\Sexpr{round(g.diff$Hedges_g, 2)}$; 95\% CI: \Sexpr{round(conf.diff.beg, 2)}, \Sexpr{round(conf.diff.end, 2)}).
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONDUCT THE TESTS
@@ -278,12 +278,21 @@ t.breaks <- c(-5, qt(p = 1-0.05, df = df.close), # rejection region (left)
               0, 5, t.close)                  # t-statistic observed
 t.breaks <- sort(unique(round(t.breaks, 2)))
 xbar.breaks <- t.breaks * s.close/sqrt(n.close) + mu0
+
+R <- 1000
+resamples.close <- tibble(t=numeric(R))
+for(i in 1:R){
+  curr.sample <- sample(x=closer.dat,
+                        size=n.close,
+                        replace=T)
+  resamples.close$t[i] = (mean(curr.sample)-mu0)/(sd(curr.sample)/sqrt(n.close))
+}
+
 #plot for part a - close responses
 close.plot <- ggplot() +
   # null distribution
   geom_line(data=ggdat.t.close, 
-            aes(x=t, y=pdf.null), color = "black")+
-  geom_hline(yintercept=0)+
+            aes(x=t, y=pdf.null, color = "Null Distribution"))+
   # rejection regions
   geom_ribbon(data=subset(ggdat.t.close, t>=qt(p = 1-0.05, df=df.close)), 
               aes(x=t, ymin=0, ymax=pdf.null),
@@ -292,10 +301,18 @@ close.plot <- ggplot() +
   geom_ribbon(data=subset(ggdat.t.close, t>=t.close), 
               aes(x=t, ymin=0, ymax=pdf.null),
               fill="red", alpha=0.25)+
-  # plot observation point
-  geom_point(data=ggdat.obs.close, aes(x=t, y=y), color="red")+
+  # Resampling Distribution
+  stat_density(data=resamples.close,
+               aes(x=t, color="Resampling Distribution"),
+               geom="line")+
   theme_bw()+
   ylab("Density")+
+  scale_color_manual(values = c("Null Distribution" = "black", "Resampling Distribution" = "grey"),
+                     name = "") +
+  geom_hline(yintercept=0)+
+  # plot observation point
+  geom_point(data=ggdat.obs.close, aes(x=t, y=y), color="red")+
+  theme(legend.position = "bottom")+
   scale_x_continuous("t",
                      breaks = round(t.breaks,2),
                      sec.axis = sec_axis(~.,
@@ -303,7 +320,7 @@ close.plot <- ggplot() +
                                          breaks = t.breaks,
                                          labels = round(xbar.breaks,2)))+
   ggtitle("T-Test for Mean Dopamine Level of Close Responses",
-          subtitle=bquote(H[0]==0*";"~H[a]>0))
+          subtitle=bquote(H[0]: mu[X]==0*";"~H[a]: mu[X]>0))
 @
 \begin{figure}[H]
 \centering
@@ -320,22 +337,34 @@ ggdat.t.far <- tibble(t=seq(-10,10,length.out=1000))|>
 # For plotting the observed point
 ggdat.obs.far <- tibble(t = t.far, 
                           y = 0) # to plot on x-axis
-t.breaks <- c(-5, qt(p = 0.05, df = df.far), # rejection region (left)
-              0, 5, t.far)                  # t-statistic observed
+t.breaks <- c(t.far, -5, qt(p = 0.05, df = df.far), # rejection region (left)
+              0, 5)                  # t-statistic observed
 t.breaks <- sort(unique(round(t.breaks, 2)))
 xbar.breaks <- t.breaks * s.far/sqrt(n.far) + mu0
-#plot for part a - far responses
+
+resamples.far <- tibble(t=numeric(R))
+for(i in 1:R){
+  curr.sample <- sample(x=further.dat,
+                        size=n.far,
+                        replace=T)
+  resamples.far$t[i] = (mean(curr.sample)-mu0)/(sd(curr.sample)/sqrt(n.far))
+}
+#plot for part b - far responses
 far.plot <- ggplot() +
   # null distribution
   geom_line(data=ggdat.t.far, 
-            aes(x=t, y=pdf.null), color = "black")+
-  geom_hline(yintercept=0)+
+            aes(x=t, y=pdf.null, color = "Null Distribution"))+
   # rejection regions
   geom_ribbon(data=subset(ggdat.t.far, t<=qt(p = 0.05, df=df.far)), 
               aes(x=t, ymin=0, ymax=pdf.null),
               fill="gray", alpha=0.5)+
+  # Resampling Distribution
+  stat_density(data=resamples.far,
+               aes(x=t, color="Resampling Distribution"),
+               geom="line")+
   # plot observation point
   geom_point(data=ggdat.obs.far, aes(x=t, y=y), color="red")+
+  geom_hline(yintercept=0)+
   theme_bw()+
   ylab("Density")+
   scale_x_continuous("t",
@@ -344,8 +373,11 @@ far.plot <- ggplot() +
                                          name = bquote(bar(x)),
                                          breaks = t.breaks,
                                          labels = round(xbar.breaks,2)))+
-  ggtitle("T-Test for Mean Dopamine Level of Far Responses for Zebra Finches ",
-          subtitle=bquote(H[0]==0*";"~H[a]<0))
+  scale_color_manual(values = c("Null Distribution" = "black", "Resampling Distribution" = "grey"),
+                     name = "") +
+  theme(legend.position = "bottom")+
+  ggtitle("T-Test for Mean Dopamine Level of Far Responses",
+          subtitle=bquote(H[0]: mu[X]==0*";"~H[a]: mu[X] <0))
 @
 \begin{figure}[H]
 \centering
@@ -366,12 +398,19 @@ t.breaks <- c(-5, qt(p = 0.025, df = df.diff), # rejection region (left)
               0, qt(p = 1-0.025, df = df.diff), 5, t.diff)                  # t-statistic observed
 t.breaks <- sort(unique(round(t.breaks, 2)))
 xbar.breaks <- t.breaks * s.diff/sqrt(n.diff) + mu0
-#plot for part a - diff responses
+
+resamples.diff <- tibble(t=numeric(R))
+for(i in 1:R){
+  curr.sample <- sample(x=diff.dat,
+                        size=n.diff,
+                        replace=T)
+  resamples.diff$t[i] = (mean(curr.sample)-mu0)/(sd(curr.sample)/sqrt(n.diff))
+}
+#plot for part c - diff responses
 diff.plot <- ggplot() +
   # null distribution
   geom_line(data=ggdat.t.diff, 
-            aes(x=t, y=pdf.null), color = "black")+
-  geom_hline(yintercept=0)+
+            aes(x=t, y=pdf.null, color = "Null Distribution"))+
   # rejection regions
   geom_ribbon(data=subset(ggdat.t.diff, t<=qt(p = 0.025, df=df.diff)), 
               aes(x=t, ymin=0, ymax=pdf.null),
@@ -379,6 +418,11 @@ diff.plot <- ggplot() +
   geom_ribbon(data=subset(ggdat.t.diff, t>=qt(0.975, df=df.diff)), 
               aes(x=t, ymin=0, ymax=pdf.null),
               fill="grey", alpha=0.5)+
+  # Resampling Distribution
+  stat_density(data=resamples.diff,
+               aes(x=t, color="Resampling Distribution"),
+               geom="line")+
+  geom_hline(yintercept=0)+
   # plot observation point
   geom_point(data=ggdat.obs.diff, aes(x=t, y=y), color="red")+
   theme_bw()+
@@ -389,8 +433,11 @@ diff.plot <- ggplot() +
                                          name = bquote(bar(x)),
                                          breaks = t.breaks,
                                          labels = round(xbar.breaks,2)))+
+  scale_color_manual(values = c("Null Distribution" = "black", "Resampling Distribution" = "grey"),
+                     name = "") +
+  theme(legend.position = "bottom")+
   ggtitle("T-Test for Mean Dopamine Level of Difference in Responses",
-          subtitle=bquote(H[0]==0*";"~H[a] != 0))
+          subtitle=bquote(H[0]: mu[X]==0*";"~H[a]: mu[X] != 0))
 @
 \begin{figure}[H]
 \centering
