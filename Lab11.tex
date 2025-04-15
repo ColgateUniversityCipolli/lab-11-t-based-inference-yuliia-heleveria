@@ -384,8 +384,153 @@ The difference between populations are statistically discernible ($t=8.51$, $p< 
 hypothesis testing plots for each part of the previous question.
 \begin{enumerate}
   \item Question 4, part(a).
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# For plotting the null distribution}
+\hldef{ggdat.t.close} \hlkwb{<-} \hlkwd{tibble}\hldef{(}\hlkwc{t}\hldef{=}\hlkwd{seq}\hldef{(}\hlopt{-}\hlnum{10}\hldef{,}\hlnum{10}\hldef{,}\hlkwc{length.out}\hldef{=}\hlnum{1000}\hldef{))|>}
+\hlkwd{mutate}\hldef{(}\hlkwc{pdf.null} \hldef{=} \hlkwd{dt}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{df}\hldef{=df.close))}
+\hlcom{# For plotting the observed point}
+\hldef{ggdat.obs.close} \hlkwb{<-} \hlkwd{tibble}\hldef{(}\hlkwc{t} \hldef{= t.close,}
+                        \hlkwc{y} \hldef{=} \hlnum{0}\hldef{)} \hlcom{# to plot on x-axis}
+\hldef{t.breaks} \hlkwb{<-} \hlkwd{c}\hldef{(}\hlopt{-}\hlnum{5}\hldef{,} \hlkwd{qt}\hldef{(}\hlkwc{p} \hldef{=} \hlnum{1}\hlopt{-}\hlnum{0.05}\hldef{,} \hlkwc{df} \hldef{= df.close),} \hlcom{# rejection region (left)}
+            \hlnum{0}\hldef{,} \hlnum{5}\hldef{, t.close)}                  \hlcom{# t-statistic observed}
+\hldef{t.breaks} \hlkwb{<-} \hlkwd{sort}\hldef{(}\hlkwd{unique}\hldef{(}\hlkwd{round}\hldef{(t.breaks,} \hlnum{2}\hldef{)))}
+\hldef{xbar.breaks} \hlkwb{<-} \hldef{t.breaks} \hlopt{*} \hldef{s.close}\hlopt{/}\hlkwd{sqrt}\hldef{(n.close)} \hlopt{+} \hldef{mu0}
+\hlcom{#plot for part a - close responses}
+\hldef{close.plot} \hlkwb{<-} \hlkwd{ggplot}\hldef{()} \hlopt{+}
+\hlcom{# null distribution}
+\hlkwd{geom_line}\hldef{(}\hlkwc{data}\hldef{=ggdat.t.close,}
+          \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=pdf.null),} \hlkwc{color} \hldef{=} \hlsng{"black"}\hldef{)}\hlopt{+}
+\hlkwd{geom_hline}\hldef{(}\hlkwc{yintercept}\hldef{=}\hlnum{0}\hldef{)}\hlopt{+}
+\hlcom{# rejection regions}
+\hlkwd{geom_ribbon}\hldef{(}\hlkwc{data}\hldef{=}\hlkwd{subset}\hldef{(ggdat.t.close, t}\hlopt{>=}\hlkwd{qt}\hldef{(}\hlkwc{p} \hldef{=} \hlnum{1}\hlopt{-}\hlnum{0.05}\hldef{,} \hlkwc{df}\hldef{=df.close)),}
+            \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{ymin}\hldef{=}\hlnum{0}\hldef{,} \hlkwc{ymax}\hldef{=pdf.null),}
+            \hlkwc{fill}\hldef{=}\hlsng{"gray"}\hldef{,} \hlkwc{alpha}\hldef{=}\hlnum{0.5}\hldef{)}\hlopt{+}
+\hlcom{# plot p-value (not visible)}
+\hlkwd{geom_ribbon}\hldef{(}\hlkwc{data}\hldef{=}\hlkwd{subset}\hldef{(ggdat.t.close, t}\hlopt{>=}\hldef{t.close),}
+            \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{ymin}\hldef{=}\hlnum{0}\hldef{,} \hlkwc{ymax}\hldef{=pdf.null),}
+            \hlkwc{fill}\hldef{=}\hlsng{"red"}\hldef{,} \hlkwc{alpha}\hldef{=}\hlnum{0.25}\hldef{)}\hlopt{+}
+\hlcom{# plot observation point}
+\hlkwd{geom_point}\hldef{(}\hlkwc{data}\hldef{=ggdat.obs.close,} \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=y),} \hlkwc{color}\hldef{=}\hlsng{"red"}\hldef{)}\hlopt{+}
+\hlkwd{theme_bw}\hldef{()}\hlopt{+}
+\hlkwd{ylab}\hldef{(}\hlsng{"Density"}\hldef{)}\hlopt{+}
+\hlkwd{scale_x_continuous}\hldef{(}\hlsng{"t"}\hldef{,}
+                   \hlkwc{breaks} \hldef{=} \hlkwd{round}\hldef{(t.breaks,}\hlnum{2}\hldef{),}
+                   \hlkwc{sec.axis} \hldef{=} \hlkwd{sec_axis}\hldef{(}\hlopt{~}\hldef{.,}
+                                       \hlkwc{name} \hldef{=} \hlkwd{bquote}\hldef{(}\hlkwd{bar}\hldef{(x)),}
+                                       \hlkwc{breaks} \hldef{= t.breaks,}
+                                       \hlkwc{labels} \hldef{=} \hlkwd{round}\hldef{(xbar.breaks,}\hlnum{2}\hldef{)))}\hlopt{+}
+\hlkwd{ggtitle}\hldef{(}\hlsng{"T-Test for Mean Dopamine Level of Close Responses"}\hldef{,}
+        \hlkwc{subtitle}\hldef{=}\hlkwd{bquote}\hldef{(H[}\hlnum{0}\hldef{]}\hlopt{==}\hlnum{0}\hlopt{*}\hlsng{";"}\hlopt{~}\hldef{H[a]}\hlopt{>}\hlnum{0}\hldef{))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\begin{figure}[H]
+\centering
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-17-1} 
+\end{knitrout}
+\caption{T-Test for Mean Dopamine Level of Difference in Close Responses for Zebra Finches.}
+\end{figure}
   \item Question 4, part(b).
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# For plotting the null distribution}
+\hldef{ggdat.t.far} \hlkwb{<-} \hlkwd{tibble}\hldef{(}\hlkwc{t}\hldef{=}\hlkwd{seq}\hldef{(}\hlopt{-}\hlnum{10}\hldef{,}\hlnum{10}\hldef{,}\hlkwc{length.out}\hldef{=}\hlnum{1000}\hldef{))|>}
+\hlkwd{mutate}\hldef{(}\hlkwc{pdf.null} \hldef{=} \hlkwd{dt}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{df}\hldef{=df.far))}
+\hlcom{# For plotting the observed point}
+\hldef{ggdat.obs.far} \hlkwb{<-} \hlkwd{tibble}\hldef{(}\hlkwc{t} \hldef{= t.far,}
+                        \hlkwc{y} \hldef{=} \hlnum{0}\hldef{)} \hlcom{# to plot on x-axis}
+\hldef{t.breaks} \hlkwb{<-} \hlkwd{c}\hldef{(}\hlopt{-}\hlnum{5}\hldef{,} \hlkwd{qt}\hldef{(}\hlkwc{p} \hldef{=} \hlnum{0.05}\hldef{,} \hlkwc{df} \hldef{= df.far),} \hlcom{# rejection region (left)}
+            \hlnum{0}\hldef{,} \hlnum{5}\hldef{, t.far)}                  \hlcom{# t-statistic observed}
+\hldef{t.breaks} \hlkwb{<-} \hlkwd{sort}\hldef{(}\hlkwd{unique}\hldef{(}\hlkwd{round}\hldef{(t.breaks,} \hlnum{2}\hldef{)))}
+\hldef{xbar.breaks} \hlkwb{<-} \hldef{t.breaks} \hlopt{*} \hldef{s.far}\hlopt{/}\hlkwd{sqrt}\hldef{(n.far)} \hlopt{+} \hldef{mu0}
+\hlcom{#plot for part a - far responses}
+\hldef{far.plot} \hlkwb{<-} \hlkwd{ggplot}\hldef{()} \hlopt{+}
+\hlcom{# null distribution}
+\hlkwd{geom_line}\hldef{(}\hlkwc{data}\hldef{=ggdat.t.far,}
+          \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=pdf.null),} \hlkwc{color} \hldef{=} \hlsng{"black"}\hldef{)}\hlopt{+}
+\hlkwd{geom_hline}\hldef{(}\hlkwc{yintercept}\hldef{=}\hlnum{0}\hldef{)}\hlopt{+}
+\hlcom{# rejection regions}
+\hlkwd{geom_ribbon}\hldef{(}\hlkwc{data}\hldef{=}\hlkwd{subset}\hldef{(ggdat.t.far, t}\hlopt{<=}\hlkwd{qt}\hldef{(}\hlkwc{p} \hldef{=} \hlnum{0.05}\hldef{,} \hlkwc{df}\hldef{=df.far)),}
+            \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{ymin}\hldef{=}\hlnum{0}\hldef{,} \hlkwc{ymax}\hldef{=pdf.null),}
+            \hlkwc{fill}\hldef{=}\hlsng{"gray"}\hldef{,} \hlkwc{alpha}\hldef{=}\hlnum{0.5}\hldef{)}\hlopt{+}
+\hlcom{# plot observation point}
+\hlkwd{geom_point}\hldef{(}\hlkwc{data}\hldef{=ggdat.obs.far,} \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=y),} \hlkwc{color}\hldef{=}\hlsng{"red"}\hldef{)}\hlopt{+}
+\hlkwd{theme_bw}\hldef{()}\hlopt{+}
+\hlkwd{ylab}\hldef{(}\hlsng{"Density"}\hldef{)}\hlopt{+}
+\hlkwd{scale_x_continuous}\hldef{(}\hlsng{"t"}\hldef{,}
+                   \hlkwc{breaks} \hldef{=} \hlkwd{round}\hldef{(t.breaks,}\hlnum{2}\hldef{),}
+                   \hlkwc{sec.axis} \hldef{=} \hlkwd{sec_axis}\hldef{(}\hlopt{~}\hldef{.,}
+                                       \hlkwc{name} \hldef{=} \hlkwd{bquote}\hldef{(}\hlkwd{bar}\hldef{(x)),}
+                                       \hlkwc{breaks} \hldef{= t.breaks,}
+                                       \hlkwc{labels} \hldef{=} \hlkwd{round}\hldef{(xbar.breaks,}\hlnum{2}\hldef{)))}\hlopt{+}
+\hlkwd{ggtitle}\hldef{(}\hlsng{"T-Test for Mean Dopamine Level of Far Responses for Zebra Finches "}\hldef{,}
+        \hlkwc{subtitle}\hldef{=}\hlkwd{bquote}\hldef{(H[}\hlnum{0}\hldef{]}\hlopt{==}\hlnum{0}\hlopt{*}\hlsng{";"}\hlopt{~}\hldef{H[a]}\hlopt{<}\hlnum{0}\hldef{))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\begin{figure}[H]
+\centering
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-19-1} 
+\end{knitrout}
+\caption{T-Test for Mean Dopamine Level of Far Responses for Zebra Finches.}
+\end{figure}
   \item Question 4, part(c).
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# For plotting the null distribution}
+\hldef{ggdat.t.diff} \hlkwb{<-} \hlkwd{tibble}\hldef{(}\hlkwc{t}\hldef{=}\hlkwd{seq}\hldef{(}\hlopt{-}\hlnum{10}\hldef{,}\hlnum{10}\hldef{,}\hlkwc{length.out}\hldef{=}\hlnum{1000}\hldef{))|>}
+\hlkwd{mutate}\hldef{(}\hlkwc{pdf.null} \hldef{=} \hlkwd{dt}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{df}\hldef{=df.diff))}
+\hlcom{# For plotting the observed point}
+\hldef{ggdat.obs.diff} \hlkwb{<-} \hlkwd{tibble}\hldef{(}\hlkwc{t} \hldef{= t.diff,}
+                      \hlkwc{y} \hldef{=} \hlnum{0}\hldef{)} \hlcom{# to plot on x-axis}
+\hldef{t.breaks} \hlkwb{<-} \hlkwd{c}\hldef{(}\hlopt{-}\hlnum{5}\hldef{,} \hlkwd{qt}\hldef{(}\hlkwc{p} \hldef{=} \hlnum{0.025}\hldef{,} \hlkwc{df} \hldef{= df.diff),} \hlcom{# rejection region (left)}
+            \hlnum{0}\hldef{,} \hlkwd{qt}\hldef{(}\hlkwc{p} \hldef{=} \hlnum{1}\hlopt{-}\hlnum{0.025}\hldef{,} \hlkwc{df} \hldef{= df.diff),} \hlnum{5}\hldef{, t.diff)}                  \hlcom{# t-statistic observed}
+\hldef{t.breaks} \hlkwb{<-} \hlkwd{sort}\hldef{(}\hlkwd{unique}\hldef{(}\hlkwd{round}\hldef{(t.breaks,} \hlnum{2}\hldef{)))}
+\hldef{xbar.breaks} \hlkwb{<-} \hldef{t.breaks} \hlopt{*} \hldef{s.diff}\hlopt{/}\hlkwd{sqrt}\hldef{(n.diff)} \hlopt{+} \hldef{mu0}
+\hlcom{#plot for part a - diff responses}
+\hldef{diff.plot} \hlkwb{<-} \hlkwd{ggplot}\hldef{()} \hlopt{+}
+\hlcom{# null distribution}
+\hlkwd{geom_line}\hldef{(}\hlkwc{data}\hldef{=ggdat.t.diff,}
+          \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=pdf.null),} \hlkwc{color} \hldef{=} \hlsng{"black"}\hldef{)}\hlopt{+}
+\hlkwd{geom_hline}\hldef{(}\hlkwc{yintercept}\hldef{=}\hlnum{0}\hldef{)}\hlopt{+}
+\hlcom{# rejection regions}
+\hlkwd{geom_ribbon}\hldef{(}\hlkwc{data}\hldef{=}\hlkwd{subset}\hldef{(ggdat.t.diff, t}\hlopt{<=}\hlkwd{qt}\hldef{(}\hlkwc{p} \hldef{=} \hlnum{0.025}\hldef{,} \hlkwc{df}\hldef{=df.diff)),}
+            \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{ymin}\hldef{=}\hlnum{0}\hldef{,} \hlkwc{ymax}\hldef{=pdf.null),}
+            \hlkwc{fill}\hldef{=}\hlsng{"gray"}\hldef{,} \hlkwc{alpha}\hldef{=}\hlnum{0.5}\hldef{)}\hlopt{+}
+\hlkwd{geom_ribbon}\hldef{(}\hlkwc{data}\hldef{=}\hlkwd{subset}\hldef{(ggdat.t.diff, t}\hlopt{>=}\hlkwd{qt}\hldef{(}\hlnum{0.975}\hldef{,} \hlkwc{df}\hldef{=df.diff)),}
+            \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{ymin}\hldef{=}\hlnum{0}\hldef{,} \hlkwc{ymax}\hldef{=pdf.null),}
+            \hlkwc{fill}\hldef{=}\hlsng{"grey"}\hldef{,} \hlkwc{alpha}\hldef{=}\hlnum{0.5}\hldef{)}\hlopt{+}
+\hlcom{# plot observation point}
+\hlkwd{geom_point}\hldef{(}\hlkwc{data}\hldef{=ggdat.obs.diff,} \hlkwd{aes}\hldef{(}\hlkwc{x}\hldef{=t,} \hlkwc{y}\hldef{=y),} \hlkwc{color}\hldef{=}\hlsng{"red"}\hldef{)}\hlopt{+}
+\hlkwd{theme_bw}\hldef{()}\hlopt{+}
+\hlkwd{ylab}\hldef{(}\hlsng{"Density"}\hldef{)}\hlopt{+}
+\hlkwd{scale_x_continuous}\hldef{(}\hlsng{"t"}\hldef{,}
+                   \hlkwc{breaks} \hldef{=} \hlkwd{round}\hldef{(t.breaks,}\hlnum{2}\hldef{),}
+                   \hlkwc{sec.axis} \hldef{=} \hlkwd{sec_axis}\hldef{(}\hlopt{~}\hldef{.,}
+                                       \hlkwc{name} \hldef{=} \hlkwd{bquote}\hldef{(}\hlkwd{bar}\hldef{(x)),}
+                                       \hlkwc{breaks} \hldef{= t.breaks,}
+                                       \hlkwc{labels} \hldef{=} \hlkwd{round}\hldef{(xbar.breaks,}\hlnum{2}\hldef{)))}\hlopt{+}
+\hlkwd{ggtitle}\hldef{(}\hlsng{"T-Test for Mean Dopamine Level of Difference in Responses"}\hldef{,}
+        \hlkwc{subtitle}\hldef{=}\hlkwd{bquote}\hldef{(H[}\hlnum{0}\hldef{]}\hlopt{==}\hlnum{0}\hlopt{*}\hlsng{";"}\hlopt{~}\hldef{H[a]} \hlopt{!=} \hlnum{0}\hldef{))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\begin{figure}[H]
+\centering
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-21-1} 
+\end{knitrout}
+\caption{T-Test for Mean Dopamine Level of Difference in Responses for Zebra Finches.}
+\end{figure}
 \end{enumerate}
 \end{enumerate}
 

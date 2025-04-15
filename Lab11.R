@@ -1,4 +1,7 @@
 #why is boxplot in between code
+#confidence intervals
+#do i need to resample for the distribution
+#descriptions for part 5
 
 ################################################################################
 # LAB 11 R CODE
