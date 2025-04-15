@@ -89,6 +89,28 @@ conduct a power analysis. How many observations would the researchers
 need to detect a moderate-to-large effect ($d=0.65$) when using 
 $\alpha=0.05$ and default power (0.80) for a two-sided one sample 
 $t$ test.
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#conduct power analysis}
+\hldef{d} \hlkwb{<-} \hlnum{0.65} \hlcom{#effect size}
+\hldef{type} \hlkwb{<-} \hlsng{"one.sample"}
+\hldef{alternative} \hlkwb{<-} \hlsng{"two.sided"}
+\hldef{alpha} \hlkwb{<-} \hlnum{0.05}
+\hldef{power} \hlkwb{<-} \hlnum{0.80}
+\hldef{power.analysis} \hlkwb{<-} \hlkwd{pwr.t.test}\hldef{(}\hlkwc{n} \hldef{=} \hlkwa{NULL}\hldef{,} \hlkwc{d}\hldef{=d,} \hlkwc{sig.level} \hldef{= alpha,} \hlkwc{power} \hldef{= power,}
+                             \hlkwc{type} \hldef{= type,} \hlkwc{alternative} \hldef{= alternative)}
+
+\hlcom{#extract n argument and get integer value (rounded up)}
+\hldef{num.obseravtions} \hlkwb{<-} \hlkwd{ceiling}\hldef{(power.analysis}\hlopt{$}\hldef{n)}
+\hldef{num.obseravtions}
+\end{alltt}
+\begin{verbatim}
+## [1] 21
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+The researchers would need at least 21 observations to detect a moderate-to-large effect ($d=0.65$) when using  $\alpha=0.05$ and default power (0.80) for a two-sided one sample $t$ test.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % COLLECT DATA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -98,6 +120,19 @@ do to collect the data for Figure 2(g). Note that you only need the
 \texttt{closer\_vals} and \texttt{further\_vals}. Ensure to 
 \texttt{mutate()} the data to get a difference 
 (e.g., \texttt{closer\_vals - further\_vals}).
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#load the file with deleted sheets}
+\hldef{fig.data} \hlkwb{<-} \hlkwd{read_csv}\hldef{(}\hlsng{"Fig2Dat.csv"}\hldef{)}
+
+\hlcom{#mutate data to get the difference}
+\hldef{fig.data} \hlkwb{<-} \hldef{fig.data|>}
+  \hlkwd{mutate}\hldef{(}\hlsng{"difference"} \hldef{= closer_vals} \hlopt{-} \hldef{further_vals)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+To collect the data for Figure 2(g), we need to download the source data for Figure 2. Then, we delete all sheets except those containing \texttt{closer\_vals} and \texttt{further\_vals}. We then combine these two sheets into one to contain \texttt{closer\_vals} and \texttt{further\_vals} side-by-side. Finally, we add new column of difference to the sheet by subtracting \texttt{further\_vals} from \texttt{closer\_vals}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SUMMARIZE DATA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -106,16 +141,167 @@ do to collect the data for Figure 2(g). Note that you only need the
   \item Summarize the further data. Do the data suggest that
    dopamine in the brains of young zebra finches decreases when
    they sing further away?
-   \item Summarize the closer data. Do the data suggest that
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{further.dat} \hlkwb{<-} \hldef{fig.data}\hlopt{$}\hldef{further_vals}
+
+\hlcom{#do numerical summary for the data}
+\hldef{further.summary} \hlkwb{<-} \hlkwd{tibble}\hldef{(}
+  \hlkwc{mean} \hldef{=} \hlkwd{mean}\hldef{(further.dat),}
+  \hlkwc{sd} \hldef{=} \hlkwd{sd}\hldef{(further.dat),}
+  \hlkwc{min} \hldef{=} \hlkwd{min}\hldef{(further.dat),}
+  \hlkwc{q1} \hldef{=} \hlkwd{quantile}\hldef{(further.dat,} \hlkwc{probs} \hldef{=} \hlnum{0.25}\hldef{),}
+  \hlkwc{median} \hldef{=} \hlkwd{quantile}\hldef{(further.dat,} \hlkwc{probs} \hldef{=} \hlnum{0.50}\hldef{),}
+  \hlkwc{q3} \hldef{=} \hlkwd{quantile}\hldef{(further.dat,} \hlkwc{probs} \hldef{=} \hlnum{0.75}\hldef{),}
+  \hlkwc{max} \hldef{=} \hlkwd{max}\hldef{(further.dat)}
+\hldef{)}
+
+\hlcom{#do graphical summary for the data}
+\hldef{furthest.boxplot} \hlkwb{<-} \hlkwd{ggplot}\hldef{(}\hlkwc{data} \hldef{=} \hlkwd{tibble}\hldef{(further.dat))}\hlopt{+}
+  \hlkwd{geom_boxplot}\hldef{(}\hlkwd{aes}\hldef{(}\hlkwc{x} \hldef{=} \hlsng{""}\hldef{,} \hlkwc{y} \hldef{= further.dat}\hlopt{*}\hlnum{100}\hldef{),}
+            \hlkwc{fill} \hldef{=} \hlsng{"lightblue"}\hldef{)}\hlopt{+} \hlcom{#make the boxplot for the data}
+  \hlkwd{theme_bw}\hldef{()}\hlopt{+}
+  \hlkwd{xlab}\hldef{(}\hlsng{"Further Data"}\hldef{)}\hlopt{+}
+  \hlkwd{ylab}\hldef{(}\hlsng{"Dopanime percentage change"}\hldef{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\begin{figure}[H]
+\centering
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-5-1} 
+\end{knitrout}
+\caption{Boxplot showing percentage change in dopamine levels when zebra finches sing further away.}
+\end{figure}
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-6}Numerical Summary of Dopamine Levels (Further Data)}
+\centering
+\begin{tabular}[t]{r|r|r|r|r|r|r}
+\hline
+mean & sd & min & q1 & median & q3 & max\\
+\hline
+-0.2027244 & 0.1303193 & -0.6027859 & -0.3092606 & -0.1867461 & -0.1227054 & -0.0299347\\
+\hline
+\end{tabular}
+\end{table}
+
+
+The data suggest that the dopamine in the brains of young zebra finches decreases when they sing further away. The numerical summary reflect the drop in the dopamine since all key measures of central tendency are negative. The maximum value is also negative. The entire boxplot lies below 0\% and there are no positive outliers.
+
+\item Summarize the closer data. Do the data suggest that
    dopamine in the brains of young zebra finches increases when
    they sing closer to their adult song?
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{closer.dat} \hlkwb{<-} \hldef{fig.data}\hlopt{$}\hldef{closer_vals}
+
+\hlcom{#do numerical summary for the data}
+\hldef{closer.summary} \hlkwb{<-} \hlkwd{tibble}\hldef{(}
+  \hlkwc{mean} \hldef{=} \hlkwd{mean}\hldef{(closer.dat),}
+  \hlkwc{sd} \hldef{=} \hlkwd{sd}\hldef{(closer.dat),}
+  \hlkwc{min} \hldef{=} \hlkwd{min}\hldef{(closer.dat),}
+  \hlkwc{q1} \hldef{=} \hlkwd{quantile}\hldef{(closer.dat,} \hlkwc{probs} \hldef{=} \hlnum{0.25}\hldef{),}
+  \hlkwc{median} \hldef{=} \hlkwd{quantile}\hldef{(closer.dat,} \hlkwc{probs} \hldef{=} \hlnum{0.50}\hldef{),}
+  \hlkwc{q3} \hldef{=} \hlkwd{quantile}\hldef{(closer.dat,} \hlkwc{probs} \hldef{=} \hlnum{0.75}\hldef{),}
+  \hlkwc{max} \hldef{=} \hlkwd{max}\hldef{(closer.dat)}
+\hldef{)}
+
+\hlcom{#do graphical summary for the data}
+\hldef{closer.boxplot} \hlkwb{<-} \hlkwd{ggplot}\hldef{(}\hlkwc{data} \hldef{=} \hlkwd{tibble}\hldef{(closer.dat))}\hlopt{+}
+  \hlkwd{geom_boxplot}\hldef{(}\hlkwd{aes}\hldef{(}\hlkwc{x} \hldef{=} \hlsng{""}\hldef{,} \hlkwc{y} \hldef{= closer.dat}\hlopt{*}\hlnum{100}\hldef{),}
+            \hlkwc{fill} \hldef{=} \hlsng{"lightblue"}\hldef{)}\hlopt{+} \hlcom{#make the boxplot for the data}
+  \hlkwd{theme_bw}\hldef{()}\hlopt{+}
+  \hlkwd{xlab}\hldef{(}\hlsng{"Closer Data"}\hldef{)}\hlopt{+}
+  \hlkwd{ylab}\hldef{(}\hlsng{"Dopanime percentage change"}\hldef{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{figure}[H]
+\centering
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-8-1} 
+\end{knitrout}
+\caption{Boxplot showing percentage change in dopamine levels when zebra finches sing closer.}
+\end{figure}
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-9}Numerical Summary of Dopamine Levels (Closer Data)}
+\centering
+\begin{tabular}[t]{r|r|r|r|r|r|r}
+\hline
+mean & sd & min & q1 & median & q3 & max\\
+\hline
+0.1562231 & 0.094083 & 0.0010821 & 0.089018 & 0.1455341 & 0.19567 & 0.3394881\\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+The data suggest that dopamine in the brains of young zebra finches increases when they sing closer to their adult song. The values in numerical summaries are positive, indicating the increase in dopamine levels. The whole boxplot lies above 0, so the dopamine levels increases when zebra finches sing closer to their adult song.
   \item Summarize the paired differences. Do the data suggest
   that there is a difference between dopamine in the brains of
   young zebra finches when they sing further away compared to 
   closer to their adult song?
-  \item \textbf{Optional Challenge:} Can you reproduce Figure 2(g)?
-  Note that the you can use \texttt{geom\_errorbar()} to plot
-  the range created by adding the mean $\pm$ one standard deviation.
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{diff.dat} \hlkwb{<-} \hldef{fig.data}\hlopt{$}\hldef{difference}
+
+\hlcom{#do numerical summary for the data}
+\hldef{diff.summary} \hlkwb{<-} \hlkwd{tibble}\hldef{(}
+\hlkwc{mean} \hldef{=} \hlkwd{mean}\hldef{(diff.dat),}
+\hlkwc{sd} \hldef{=} \hlkwd{sd}\hldef{(diff.dat),}
+\hlkwc{min} \hldef{=} \hlkwd{min}\hldef{(diff.dat),}
+\hlkwc{q1} \hldef{=} \hlkwd{quantile}\hldef{(diff.dat,} \hlkwc{probs} \hldef{=} \hlnum{0.25}\hldef{),}
+\hlkwc{median} \hldef{=} \hlkwd{quantile}\hldef{(diff.dat,} \hlkwc{probs} \hldef{=} \hlnum{0.50}\hldef{),}
+\hlkwc{q3} \hldef{=} \hlkwd{quantile}\hldef{(diff.dat,} \hlkwc{probs} \hldef{=} \hlnum{0.75}\hldef{),}
+\hlkwc{max} \hldef{=} \hlkwd{max}\hldef{(diff.dat)}
+\hldef{)}
+
+\hlcom{#do graphical summary for the data}
+\hldef{diff.boxplot} \hlkwb{<-} \hlkwd{ggplot}\hldef{(}\hlkwc{data} \hldef{=} \hlkwd{tibble}\hldef{(diff.dat))}\hlopt{+}
+\hlkwd{geom_boxplot}\hldef{(}\hlkwd{aes}\hldef{(}\hlkwc{x} \hldef{=} \hlsng{""}\hldef{,} \hlkwc{y} \hldef{= diff.dat}\hlopt{*}\hlnum{100}\hldef{),}
+             \hlkwc{fill} \hldef{=} \hlsng{"lightblue"}\hldef{)}\hlopt{+} \hlcom{#make the boxplot for the data}
+\hlkwd{theme_bw}\hldef{()}\hlopt{+}
+\hlkwd{xlab}\hldef{(}\hlsng{"Paired difference"}\hldef{)}\hlopt{+}
+\hlkwd{ylab}\hldef{(}\hlsng{"Dopanime percentage change"}\hldef{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{figure}[H]
+\centering
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-11-1} 
+\end{knitrout}
+\caption{Boxplot showing percentage change in dopamine levels in paired difference of closer and further values.}
+\end{figure}
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-12}Numerical Summary of Dopamine Levels (Paired Difference)}
+\centering
+\begin{tabular}[t]{r|r|r|r|r|r|r}
+\hline
+mean & sd & min & q1 & median & q3 & max\\
+\hline
+0.3589475 & 0.2108744 & 0.043353 & 0.2286407 & 0.3320846 & 0.4677148 & 0.9318804\\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+The data suggest that there is a difference between dopamine in the brains of young zebra finches when they sing further away compared to closer to their adult song. The numerical summaries show that all paired differences are positive. This means that every bird had higher dopamine when it sang closer to its adult song compared to when it sang further away from its adult song. Also, the whole box plot lies above 0, which indicates dopamine increase for the closer conditions.
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONDUCT THE TESTS

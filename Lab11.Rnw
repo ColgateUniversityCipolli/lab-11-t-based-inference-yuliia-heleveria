@@ -16,6 +16,8 @@
 \begin{document}
 <<echo=F, message=F, warning=F>>=
 library(tidyverse)
+library(pwr)
+library(effectsize)
 @
 
 \cite{Kasdin25} show that dopamine in the brains of young zebra finches acts as 
@@ -41,6 +43,21 @@ conduct a power analysis. How many observations would the researchers
 need to detect a moderate-to-large effect ($d=0.65$) when using 
 $\alpha=0.05$ and default power (0.80) for a two-sided one sample 
 $t$ test.
+<<size = 'scriptsize', message=F, warning=F>>=
+#conduct power analysis
+d <- 0.65 #effect size
+type <- "one.sample" 
+alternative <- "two.sided" 
+alpha <- 0.05
+power <- 0.80
+power.analysis <- pwr.t.test(n = NULL, d=d, sig.level = alpha, power = power,
+                             type = type, alternative = alternative)
+
+#extract n argument and get integer value (rounded up)
+num.obseravtions <- ceiling(power.analysis$n)
+num.obseravtions
+@
+The researchers would need at least \Sexpr{num.obseravtions} observations to detect a moderate-to-large effect ($d=0.65$) when using  $\alpha=0.05$ and default power (0.80) for a two-sided one sample $t$ test.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % COLLECT DATA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -50,6 +67,15 @@ do to collect the data for Figure 2(g). Note that you only need the
 \texttt{closer\_vals} and \texttt{further\_vals}. Ensure to 
 \texttt{mutate()} the data to get a difference 
 (e.g., \texttt{closer\_vals - further\_vals}).
+<<size = 'scriptsize', message=F, warning=F>>=
+#load the file with deleted sheets
+fig.data <- read_csv("Fig2Dat.csv")
+
+#mutate data to get the difference
+fig.data <- fig.data|>
+  mutate("difference" = closer_vals - further_vals)
+@
+To collect the data for Figure 2(g), we need to download the source data for Figure 2. Then, we delete all sheets except those containing \texttt{closer\_vals} and \texttt{further\_vals}. We then combine these two sheets into one to contain \texttt{closer\_vals} and \texttt{further\_vals} side-by-side. Finally, we add new column of difference to the sheet by subtracting \texttt{further\_vals} from \texttt{closer\_vals}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SUMMARIZE DATA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,16 +84,119 @@ do to collect the data for Figure 2(g). Note that you only need the
   \item Summarize the further data. Do the data suggest that
    dopamine in the brains of young zebra finches decreases when
    they sing further away?
-   \item Summarize the closer data. Do the data suggest that
+   <<size = 'scriptsize', message=F, warning=F>>=
+further.dat <- fig.data$further_vals
+
+#do numerical summary for the data
+further.summary <- tibble(
+  mean = mean(further.dat),
+  sd = sd(further.dat),
+  min = min(further.dat),
+  q1 = quantile(further.dat, probs = 0.25),
+  median = quantile(further.dat, probs = 0.50),
+  q3 = quantile(further.dat, probs = 0.75),
+  max = max(further.dat)
+)
+
+#do graphical summary for the data
+furthest.boxplot <- ggplot(data = tibble(further.dat))+
+  geom_boxplot(aes(x = "", y = further.dat*100),
+               fill = "lightblue")+ #make the boxplot for the data
+  theme_bw()+
+  xlab("Further Data")+
+  ylab("Dopanime percentage change")
+@
+
+
+\begin{figure}[H]
+\centering
+<<echo=FALSE, fig.width=3, fig.height=3, message=FALSE, warning=FALSE>>=
+print(furthest.boxplot)
+@
+\caption{Boxplot showing percentage change in dopamine levels when zebra finches sing further away.}
+\end{figure}
+<<results='asis', echo=FALSE, message=FALSE, warning=FALSE>>=
+kable(further.summary, caption = "Numerical Summary of Dopamine Levels (Further Data)")
+@
+The data suggest that the dopamine in the brains of young zebra finches decreases when they sing further away. The numerical summary reflect the drop in the dopamine since all key measures of central tendency are negative. The maximum value is also negative. The entire boxplot lies below 0\% and there are no positive outliers.
+
+\item Summarize the closer data. Do the data suggest that
    dopamine in the brains of young zebra finches increases when
    they sing closer to their adult song?
+   <<size = 'scriptsize', message=F, warning=F>>=
+closer.dat <- fig.data$closer_vals
+
+#do numerical summary for the data
+closer.summary <- tibble(
+  mean = mean(closer.dat),
+  sd = sd(closer.dat),
+  min = min(closer.dat),
+  q1 = quantile(closer.dat, probs = 0.25),
+  median = quantile(closer.dat, probs = 0.50),
+  q3 = quantile(closer.dat, probs = 0.75),
+  max = max(closer.dat)
+)
+
+#do graphical summary for the data
+closer.boxplot <- ggplot(data = tibble(closer.dat))+
+  geom_boxplot(aes(x = "", y = closer.dat*100),
+               fill = "lightblue")+ #make the boxplot for the data
+  theme_bw()+
+  xlab("Closer Data")+
+  ylab("Dopanime percentage change")
+@
+
+\begin{figure}[H]
+\centering
+<<echo=FALSE, fig.width=3, fig.height=3, message=FALSE, warning=FALSE>>=
+print(closer.boxplot)
+@
+\caption{Boxplot showing percentage change in dopamine levels when zebra finches sing closer.}
+\end{figure}
+<<results='asis', echo=FALSE, message=FALSE, warning=FALSE>>=
+kable(closer.summary, caption = "Numerical Summary of Dopamine Levels (Closer Data)")
+@
+
+The data suggest that dopamine in the brains of young zebra finches increases when they sing closer to their adult song. The values in numerical summaries are positive, indicating the increase in dopamine levels. The whole boxplot lies above 0, so the dopamine levels increases when zebra finches sing closer to their adult song.
   \item Summarize the paired differences. Do the data suggest
   that there is a difference between dopamine in the brains of
   young zebra finches when they sing further away compared to 
   closer to their adult song?
-  \item \textbf{Optional Challenge:} Can you reproduce Figure 2(g)?
-  Note that the you can use \texttt{geom\_errorbar()} to plot
-  the range created by adding the mean $\pm$ one standard deviation.
+  <<size = 'scriptsize', message=F, warning=F>>=
+diff.dat <- fig.data$difference
+
+#do numerical summary for the data
+diff.summary <- tibble(
+  mean = mean(diff.dat),
+  sd = sd(diff.dat),
+  min = min(diff.dat),
+  q1 = quantile(diff.dat, probs = 0.25),
+  median = quantile(diff.dat, probs = 0.50),
+  q3 = quantile(diff.dat, probs = 0.75),
+  max = max(diff.dat)
+)
+
+#do graphical summary for the data
+diff.boxplot <- ggplot(data = tibble(diff.dat))+
+  geom_boxplot(aes(x = "", y = diff.dat*100),
+               fill = "lightblue")+ #make the boxplot for the data
+  theme_bw()+
+  xlab("Paired difference")+
+  ylab("Dopanime percentage change")
+@
+
+\begin{figure}[H]
+\centering
+<<echo=FALSE, fig.width=3, fig.height=3, message=FALSE, warning=FALSE>>=
+print(diff.boxplot)
+@
+\caption{Boxplot showing percentage change in dopamine levels in paired difference of closer and further values.}
+\end{figure}
+<<results='asis', echo=FALSE, message=FALSE, warning=FALSE>>=
+kable(diff.summary, caption = "Numerical Summary of Dopamine Levels (Paired Difference)")
+@
+
+The data suggest that there is a difference between dopamine in the brains of young zebra finches when they sing further away compared to closer to their adult song. The numerical summaries show that all paired differences are positive. This means that every bird had higher dopamine when it sang closer to its adult song compared to when it sang further away from its adult song. Also, the whole box plot lies above 0, which indicates dopamine increase for the closer conditions.
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONDUCT THE TESTS

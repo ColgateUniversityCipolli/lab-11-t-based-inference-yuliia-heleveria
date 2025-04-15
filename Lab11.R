@@ -1,5 +1,4 @@
-#make sure it runs from scratch
-#get the finite interval for the confodence interval by doing two-sided test
+#why is boxplot in between code
 
 ################################################################################
 # LAB 11 R CODE
@@ -251,7 +250,7 @@ diff.plot <- ggplot() +
   geom_ribbon(data=subset(ggdat.t.diff, t<=qt(p = 0.025, df=df.diff)), 
               aes(x=t, ymin=0, ymax=pdf.null),
               fill="gray", alpha=0.5)+
-  geom_ribbon(data=subset(ggdat.t, t>=qt(0.975, df=df.diff)), 
+  geom_ribbon(data=subset(ggdat.t.diff, t>=qt(0.975, df=df.diff)), 
               aes(x=t, ymin=0, ymax=pdf.null),
               fill="grey", alpha=0.5)+
   # plot observation point
