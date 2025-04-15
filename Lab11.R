@@ -1,7 +1,8 @@
 #why is boxplot in between code
 #confidence intervals
-#do i need to resample for the distribution
 #descriptions for part 5
+#make sure vode runs from scratch
+#update the .rnw file for part 4 and 5
 
 ################################################################################
 # LAB 11 R CODE
@@ -116,46 +117,46 @@ diff.boxplot <- ggplot(data = tibble(diff.dat))+
 conf.level = 0.95
 mu0 <- 0
 #part a - conduct t-test for close responses
-p.val.close <- t.test(x=closer.dat, mu = mu0, alternative = "greater")
-#get values for parenthesis
-conf.int.close <- p.val.close$conf.int #get the confidence interval
+t.test.close <- t.test(x=closer.dat, mu = mu0, alternative = "greater")
+#get the confidence interval using the two-sided test
+t.test.close.interval <- t.test(x=closer.dat, mu = mu0, alternative = "two.sided")
+conf.int.close <- t.test.close.interval$conf.int #get the confidence interval
 conf.close.beg <- conf.int.close[1]
 conf.close.end <- conf.int.close[2]
-t.close <- p.val.close$statistic #get t
-df.close <- p.val.close$parameter #get df
+t.close <- t.test.close$statistic #get t
+df.close <- t.test.close$parameter #get df
 g.close <- hedges_g(x = closer.dat, mu = mu0, alternative = "greater") #get g
-n.close <- p.val.close$parameter + 1
-s.close <- p.val.close$stderr * sqrt(n.close)
-#get p-value
-p.val.close <- p.val.close$p.value
+n.close <- t.test.close$parameter + 1 #get n
+s.close <- t.test.close$stderr * sqrt(n.close) #get standard error
+t.test.close <- t.test.close$p.value #get p-value
 
 #part b - conduct t-test for far responses
-p.val.far <- t.test(x=further.dat, mu = mu0, alternative = "less")
-#get values for parenthesis
-conf.int.far <- p.val.far$conf.int #get the confidence interval
+t.test.far <- t.test(x=further.dat, mu = mu0, alternative = "less")
+#get the confidence interval using the two-sided test
+t.test.far.interval <- t.test(x=further.dat, mu = mu0, alternative = "two.sided")
+conf.int.far <- t.test.far.interval$conf.int #get the confidence interval
 conf.far.beg <- conf.int.far[1]
 conf.far.end <- conf.int.far[2]
-t.far <- p.val.far$statistic #get t 
-df.far <- p.val.far$parameter #get df
+t.far <- t.test.far$statistic #get t 
+df.far <- t.test.far$parameter #get df
 g.far <- hedges_g(x = further.dat, mu = mu0, alternative = "less") #get g
-n.far <- p.val.far$parameter + 1
-s.far <- p.val.far$stderr * sqrt(n.far)
-#get p-value
-p.val.far <- p.val.far$p.value
+n.far <- t.test.far$parameter + 1 #get n
+s.far <- t.test.far$stderr * sqrt(n.far) #get standard error
+t.test.far <- t.test.far$p.value #get p-value
 
 #part c - conduct t-test for difference
-p.val.diff <- t.test(x=diff.dat, mu = mu0, alternative = "two.sided")
-#get values for parenthesis
-conf.int.diff <- p.val.diff$conf.int #get the confidence interval
+t.test.diff <- t.test(x=diff.dat, mu = mu0, alternative = "two.sided")
+#get the confidence interval using the two-sided test
+t.test.diff.interval <- t.test(x=diff.dat, mu = mu0, alternative = "two.sided")
+conf.int.diff <- t.test.diff.interval$conf.int #get the confidence interval
 conf.diff.beg <- conf.int.diff[1]
 conf.diff.end <- conf.int.diff[2]
-t.diff <- p.val.diff$statistic #get t 
-df.diff <- p.val.diff$parameter #get df
+t.diff <- t.test.diff$statistic #get t 
+df.diff <- t.test.diff$parameter #get df
 g.diff <- hedges_g(x = diff.dat, mu = mu0, alternative = "two.sided") #get g
-n.diff <- p.val.diff$parameter + 1
-s.diff <- p.val.diff$stderr * sqrt(n.diff)
-#get p-value
-p.val.diff <- p.val.diff$p.value
+n.diff <- t.test.diff$parameter + 1 #get n
+s.diff <- t.test.diff$stderr * sqrt(n.diff) #get standard error
+t.test.diff <- t.test.diff$p.value #get p-value
 
 ################################################################################
 # Task 5: create hypothesis testing plots
