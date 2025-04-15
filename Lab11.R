@@ -1,8 +1,3 @@
-
-#descriptions for part 5
-#make sure vode runs from scratch
-
-
 ################################################################################
 # LAB 11 R CODE
 # YULIIA HELEVERIA
